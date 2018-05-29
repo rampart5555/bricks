@@ -8,9 +8,7 @@ public class Ball : MonoBehaviour {
 	public AudioClip m_brickHit;
 
 	void Start () 
-    {
-        Rigidbody2D rb=gameObject.GetComponent<Rigidbody2D>();
-        rb.velocity = m_speed;		
+    {        
 	}
 	
 	// Update is called once per frame
@@ -19,10 +17,37 @@ public class Ball : MonoBehaviour {
 		
 	}
 
+    public void SetSpeed(float x,float y)
+    {
+        m_speed.Set (x, y);
+        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+        rb.velocity = m_speed;      
+    }
+
 	void OnCollisionEnter2D(Collision2D col)
 	{
 		//Debug.Log (col.gameObject.name);
-		AudioSource.PlayClipAtPoint (m_brickHit, transform.position);
-			
+		//AudioSource.PlayClipAtPoint (m_brickHit, transform.position);
+        if (col.gameObject.tag == "Brick") 
+        {
+            //collision.gameObject.SendMessage ("ApplyDamage", 10);
+            Debug.Log ("Brick hit");
+            Brick br=(Brick)col.gameObject.GetComponent<Brick>();
+            switch (br.m_brickType) 
+            {
+                case Brick.BrickType.brick_brown:
+                    Debug.Log ("brick_brown");
+                    break;
+                case Brick.BrickType.brick_red:
+                    Debug.Log ("brick_red");
+                    break;
+                case Brick.BrickType.brick_turquoise:
+                    Debug.Log ("brick_turquoise");
+                    break;
+                case Brick.BrickType.brick_white:
+                    Debug.Log ("brick_white");
+                    break;
+            }
+        }		
 	}
 }

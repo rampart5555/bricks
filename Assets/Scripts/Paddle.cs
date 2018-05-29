@@ -21,8 +21,12 @@ public class Paddle : MonoBehaviour {
             RaycastHit hit;
             if (Physics.Raycast (ray, out hit)) 
             {                   
-                m_targetJoint.target = new Vector2 (hit.point.x,hit.point.y);
-            }                
+                m_targetJoint.target = new Vector2 (hit.point.x, hit.point.y);
+            } 
+            else 
+            {
+                Debug.Log ("No ray");
+            }
         }		
 	}
 }
