@@ -29,7 +29,7 @@ GameObject:
   m_TagString: Brick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4490829544900520
 Transform:
@@ -142,3 +142,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_brickType: 2
+  m_brickValue: 15

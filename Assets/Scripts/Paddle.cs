@@ -23,10 +23,6 @@ public class Paddle : MonoBehaviour {
             {                   
                 m_targetJoint.target = new Vector2 (hit.point.x, hit.point.y);
             } 
-            else 
-            {
-                Debug.Log ("No ray");
-            }
         }		
 	}
 }

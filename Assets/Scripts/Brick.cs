@@ -14,6 +14,7 @@ public class Brick : MonoBehaviour
     };
 
     public BrickType m_brickType;
+    public int m_brickValue;
 
 	void Start()
 	{
