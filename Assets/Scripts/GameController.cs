@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
 	public Bounds targetBounds;
 
     private BrickPrefab m_brickPrefab;
+    private PowerupPrefab m_powerupPrefab;
     private int m_brickNumber;
     private int m_score;
 
@@ -21,7 +22,7 @@ public class GameController : MonoBehaviour
         m_score = 0;
         m_butLoadLevel.onClick.AddListener(delegate {LoadLevel("level_01");});
 		CameraSizeChange ();
-        LoadBrickPrefab ();
+        LoadPrefab ();
 	}
     void Update () 
     {
@@ -35,10 +36,12 @@ public class GameController : MonoBehaviour
         m_fpsGUI.text = text;
     }
 
-    private void LoadBrickPrefab()
+    private void LoadPrefab()
     {
         m_brickPrefab = new BrickPrefab ();
         m_brickPrefab.LoadPrefabs ();
+        m_powerupPrefab = new PowerupPrefab ();
+        m_powerupPrefab.LoadPrefabs ();
     }
 
 
@@ -60,20 +63,42 @@ public class GameController : MonoBehaviour
 		string str = string.Format ("CameraSize: {0}", Camera.main.orthographicSize);
 	}
 
-    void AddBrick(int  i, int j, int brick_id)
+    void AddBrick(int  i, int j, int brick_id, int powerup_id)
     {
         float x = 1.2f - i * 0.2f - 0.1f;
         float y = 1.4f - j * 0.1f - 0.1f;
         Brick.BrickType brick_type = (Brick.BrickType)brick_id;
-        if (m_brickPrefab.m_brickMap.ContainsKey (brick_type)) 
-        {
-            Instantiate (m_brickPrefab.m_brickMap [brick_type], new Vector3 (x, y, 0.07f), Quaternion.identity);
-            m_brickNumber++;
+        Powerup.PowerupType powerup_type = (Powerup.PowerupType)powerup_id;
+        GameObject brick = (GameObject)m_brickPrefab.GetPrefab (brick_type);
+
+        if (brick == null)
+            return;
+        
+        GameObject brick_obj=Instantiate (brick, new Vector3 (x, y, 0.07f), Quaternion.identity) as GameObject;
+        m_brickNumber++;
+
+        if (powerup_type != Powerup.PowerupType.powerup_none) 
+        {               
+            brick_obj.GetComponent<Brick> ().m_powerupType = powerup_type;
         }
+    }
+
+    public void AddPowerup(Vector3 pos, Powerup.PowerupType powerup_type)
+    {       
+        GameObject powerup = m_powerupPrefab.GetPrefab(powerup_type);
+        if (powerup == null)
+            return;        
+        Instantiate (powerup, pos, Quaternion.identity);
     }
 
     public void RemoveBrick(GameObject brick)
     {
+        Brick brick_obj = brick.GetComponent<Brick> ();
+        Powerup.PowerupType powerup_type = brick_obj.GetPowerup ();
+        if (powerup_type != Powerup.PowerupType.powerup_none)
+            AddPowerup (brick.transform.position, powerup_type);
+        else
+            Debug.LogWarningFormat ("Not found {0}", powerup_type);
         Destroy (brick);
         m_brickNumber--;
     }
@@ -94,9 +119,10 @@ public class GameController : MonoBehaviour
             for (int i = 0; i < tmx.m_width; i++) 
             {
                 int brick_id = tmx.m_brickData [j * tmx.m_width + i];
+                int powerup_id = tmx.m_powerupData [j * tmx.m_width + i];
                 if (brick_id != 0) 
                 {                    
-                    AddBrick (i, j, brick_id);
+                    AddBrick (i, j, brick_id, powerup_id);
                 }
             }        
         }
@@ -111,7 +137,7 @@ public class GameController : MonoBehaviour
 
 class BrickPrefab
 {
-    public Dictionary<Brick.BrickType,Transform> m_brickMap;
+    public Dictionary<Brick.BrickType,GameObject> m_brickMap;
     Dictionary<Brick.BrickType,string > m_brickMapDef = new Dictionary<Brick.BrickType,string >()
     {        
         {Brick.BrickType.brick_brown,     "Prefab/brick_brown"},
@@ -127,18 +153,66 @@ class BrickPrefab
 
     public void LoadPrefabs()
     {   
-        m_brickMap = new Dictionary<Brick.BrickType, Transform> ();
+        m_brickMap = new Dictionary<Brick.BrickType, GameObject> ();
         foreach(KeyValuePair<Brick.BrickType, string> entry in m_brickMapDef)
         {
             // do something with entry.Value or entry.Key
-            Transform brick = (Transform)Resources.Load(entry.Value, typeof(Transform));
+            GameObject brick = (GameObject)Resources.Load(entry.Value, typeof(GameObject));
             if (brick == null) 
             {
-                Debug.LogError ("Prefab not found: " + entry.Value);
+                Debug.LogWarningFormat ("Prefab not found: " + entry.Value);
                 continue;
             }
             m_brickMap.Add (entry.Key, brick);
         }            
     }
+    public GameObject GetPrefab(Brick.BrickType brick_type)
+    {
+        if (!m_brickMap.ContainsKey (brick_type)) 
+        {
+            Debug.LogWarningFormat ("Brick prefab not found {0}", brick_type);
+            return null;
+        }
+        return m_brickMap [brick_type];
+    }
+}
 
+class PowerupPrefab
+{
+    public Dictionary<Powerup.PowerupType,GameObject> m_powerupMap;
+    Dictionary<Powerup.PowerupType,string > m_powerupMapDef = new Dictionary<Powerup.PowerupType,string >()
+    {        
+        {Powerup.PowerupType.powerup_balls, "Prefab/powerup_balls"},
+    };
+
+    public PowerupPrefab()
+    {
+
+    }
+
+    public void LoadPrefabs()
+    {   
+        m_powerupMap = new Dictionary<Powerup.PowerupType, GameObject> ();
+        foreach(KeyValuePair<Powerup.PowerupType, string> entry in m_powerupMapDef)
+        {
+            // do something with entry.Value or entry.Key
+            GameObject powerup = (GameObject)Resources.Load(entry.Value, typeof(GameObject));
+            if (powerup == null) 
+            {
+                Debug.LogWarningFormat("Prefab not found:{} ",entry.Value);
+                continue;
+            }
+            m_powerupMap.Add (entry.Key, powerup);
+        }            
+    }
+
+    public GameObject GetPrefab(Powerup.PowerupType powerup_type)
+    {
+        if (!m_powerupMap.ContainsKey (powerup_type)) 
+        {
+            Debug.LogWarningFormat ("Powerup prefab not found {0}", powerup_type);
+            return null;
+        }
+        return m_powerupMap [powerup_type];
+    }
 }

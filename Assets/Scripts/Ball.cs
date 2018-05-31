@@ -9,10 +9,19 @@ public class Ball : MonoBehaviour {
     public float m_speed;
 	public AudioClip m_brickHit;
     private GameController m_gameController;
+    private float PI_2,PI_3;
+    private bool m_directionChanged;
+    private float m_reflectionAngle;
+    private ContactPoint2D[] m_contacts;
+
 	void Start () 
     {    
         GameObject gc_obj = GameObject.FindWithTag("GameController");
         m_gameController = gc_obj.GetComponent<GameController> ();
+        PI_2 = Mathf.PI / 2.0f;
+        PI_3 = Mathf.PI / 3.0f;
+        m_directionChanged = false;
+        m_contacts = new ContactPoint2D[5];
 	}
 	
 	// Update is called once per frame
@@ -56,12 +65,23 @@ public class Ball : MonoBehaviour {
         } else if (col.gameObject.tag == "Paddle") 
         {    
             GameObject paddle = col.gameObject;
-            ContactPoint2D [] contacts=new ContactPoint2D[5];
             Rigidbody2D rb = paddle.GetComponent<Rigidbody2D> ();
-            int csz = rb.GetContacts(contacts);
-            float dist_x = contacts [0].point.x - paddle.transform.position.x;
-            float angle = 90.0f - 60.0f * dist_x;
-            Debug.Log ("Contact points: " + angle + " " + dist_x);
+            rb.GetContacts (m_contacts);
+            float dist_x = m_contacts[0].point.x - paddle.transform.position.x;
+            m_reflectionAngle = PI_2 + PI_3 * dist_x/0.25f;
+            //Debug.LogFormat ("{0},{1}", m_reflectionAngle * 180 / Math.PI,dist_x);
+            m_directionChanged = true;
+
         }
 	}
+
+    void OnCollisionExit2D(Collision2D col)
+    {
+        if (m_directionChanged == true) 
+        {
+            m_directionChanged = false;
+            SetSpeed (-Mathf.Cos (m_reflectionAngle), Mathf.Sin (m_reflectionAngle));
+            //Debug.LogFormat ("Collision Exit {0}, {1}", -Mathf.Cos (m_reflectionAngle), Mathf.Sin (m_reflectionAngle));
+        }
+    }
 }

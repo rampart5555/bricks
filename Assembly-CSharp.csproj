@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\LoadLevel.cs" />
      <Compile Include="Assets\Scripts\Paddle.cs" />
      <Compile Include="Assets\Scripts\ParseTMX.cs" />
+     <Compile Include="Assets\Scripts\Powerup.cs" />
      <None Include="Assets\Resources\Levels\level_01.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
