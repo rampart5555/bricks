@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114050072168482502}
   - component: {fileID: 50777320759127324}
   - component: {fileID: 61745180820143392}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: brick_white
   m_TagString: Brick
   m_Icon: {fileID: 0}
@@ -143,3 +143,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_brickType: 4
   m_brickValue: 25
+  m_powerupType: 0

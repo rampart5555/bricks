@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 50961138708784680}
   - component: {fileID: 58360740884243932}
   - component: {fileID: 114547263879091114}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: powerup_balls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,3 +132,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_powerupType: 5
+  m_speed: 2
