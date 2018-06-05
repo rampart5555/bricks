@@ -10,13 +10,15 @@ public class GameController : MonoBehaviour
     public Text m_fpsGUI;
 
 	public Bounds targetBounds;
-
+    private GameObject m_ball;
     private BrickPrefab m_brickPrefab;
     private PowerupPrefab m_powerupPrefab;
     private int m_brickNumber;
+    private int m_powerupNumber;
     private int m_score;
 
     float m_deltaTime = 0.000001f;
+
 	void Start()
 	{		        
         m_score = 0;
@@ -24,10 +26,12 @@ public class GameController : MonoBehaviour
 		CameraSizeChange ();
         LoadPrefab ();
 	}
+
     void Update () 
     {
         m_deltaTime += (Time.unscaledDeltaTime - m_deltaTime) * 0.1f;       
     }
+
     void OnGUI()
     {
         float msec = m_deltaTime * 1000.0f;
@@ -42,6 +46,7 @@ public class GameController : MonoBehaviour
         m_brickPrefab.LoadPrefabs ();
         m_powerupPrefab = new PowerupPrefab ();
         m_powerupPrefab.LoadPrefabs ();
+        m_ball = (GameObject)Resources.Load("Prefab/ball", typeof(GameObject));
     }
 
 
@@ -82,6 +87,17 @@ public class GameController : MonoBehaviour
             brick_obj.GetComponent<Brick> ().m_powerupType = powerup_type;
         }
     }
+           
+    public void RemoveBrick(GameObject brick)
+    {
+        Brick brick_obj = brick.GetComponent<Brick> ();
+        Powerup.PowerupType powerup_type = brick_obj.GetPowerup ();
+        if (powerup_type != Powerup.PowerupType.powerup_none)
+            AddPowerup (brick.transform.position, powerup_type);
+        
+        Destroy (brick);
+        m_brickNumber--;
+    }
 
     public void AddPowerup(Vector3 pos, Powerup.PowerupType powerup_type)
     {       
@@ -89,18 +105,26 @@ public class GameController : MonoBehaviour
         if (powerup == null)
             return;        
         Instantiate (powerup, pos, Quaternion.identity);
+        m_powerupNumber++;
     }
 
-    public void RemoveBrick(GameObject brick)
+    public void RemovePowerup(GameObject powerup)
     {
-        Brick brick_obj = brick.GetComponent<Brick> ();
-        Powerup.PowerupType powerup_type = brick_obj.GetPowerup ();
-        if (powerup_type != Powerup.PowerupType.powerup_none)
-            AddPowerup (brick.transform.position, powerup_type);
-        else
-            Debug.LogWarningFormat ("Not found {0}", powerup_type);
-        Destroy (brick);
-        m_brickNumber--;
+        Powerup pup = powerup.GetComponent<Powerup> ();
+        if (pup.m_powerupType == Powerup.PowerupType.powerup_balls) {
+            for (int i = 0; i < 3; i++) {   
+                Vector3 pos = m_ball.transform.position;
+                pos.Set (0.0f, 0.0f, pos.z);
+                GameObject ball = Instantiate (m_ball, pos, Quaternion.identity);
+                Ball ball_obj = ball.GetComponent<Ball> ();
+                ball_obj.SetSpeed (-1.0f + (float)i, 1.0f);
+            }
+        } else if (pup.m_powerupType == Powerup.PowerupType.powerup_cannon) 
+        {
+            Debug.Log ("Powerup cannon");
+        }
+        Destroy (powerup);
+        m_powerupNumber--;
     }
 
     public void LoadLevel(string level)
@@ -183,6 +207,7 @@ class PowerupPrefab
     Dictionary<Powerup.PowerupType,string > m_powerupMapDef = new Dictionary<Powerup.PowerupType,string >()
     {        
         {Powerup.PowerupType.powerup_balls, "Prefab/powerup_balls"},
+        {Powerup.PowerupType.powerup_cannon, "Prefab/powerup_cannon"}
     };
 
     public PowerupPrefab()

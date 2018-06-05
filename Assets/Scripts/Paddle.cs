@@ -6,9 +6,13 @@ public class Paddle : MonoBehaviour {
 
 	// Use this for initialization
     private TargetJoint2D m_targetJoint;
+    private GameController m_gameController;
+
 	void Start () 
     {         
         m_targetJoint = gameObject.GetComponent<TargetJoint2D> ();
+        GameObject gc_obj = GameObject.FindWithTag("GameController");
+        m_gameController = gc_obj.GetComponent<GameController> ();
 	}
 	
 	// Update is called once per frame
@@ -25,5 +29,12 @@ public class Paddle : MonoBehaviour {
             } 
         }		
 	}
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Powerup") 
+        {                         
+            m_gameController.RemovePowerup (col.gameObject);
+        }
+    }
 }
 
