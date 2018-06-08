@@ -8,6 +8,7 @@ TagManager:
   - Brick
   - Paddle
   - Powerup
+  - BulletSpawn
   layers:
   - Default
   - TransparentFX

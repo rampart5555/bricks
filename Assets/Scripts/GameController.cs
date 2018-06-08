@@ -11,8 +11,11 @@ public class GameController : MonoBehaviour
 
 	public Bounds targetBounds;
     private GameObject m_ball;
+    private GameObject m_bullet;
+    private GameObject m_bulletSpawn;
     private BrickPrefab m_brickPrefab;
     private PowerupPrefab m_powerupPrefab;
+    private Queue<GameObject> m_bulletList;
     private int m_brickNumber;
     private int m_powerupNumber;
     private int m_score;
@@ -47,6 +50,17 @@ public class GameController : MonoBehaviour
         m_powerupPrefab = new PowerupPrefab ();
         m_powerupPrefab.LoadPrefabs ();
         m_ball = (GameObject)Resources.Load("Prefab/ball", typeof(GameObject));
+        m_bulletSpawn = GameObject.FindWithTag ("BulletSpawn");
+        /*bullets */
+        m_bulletList = new Queue<GameObject> (10);
+        m_bullet = (GameObject)Resources.Load("Prefab/bullet", typeof(GameObject));
+        for (int i = 0; i < 10; i++) 
+        {
+            GameObject bullet = Instantiate (m_bullet);
+            bullet.SetActive (false);
+            m_bulletList.Enqueue (bullet);
+        }
+
     }
 
 
@@ -125,6 +139,27 @@ public class GameController : MonoBehaviour
         }
         Destroy (powerup);
         m_powerupNumber--;
+    }
+
+    public void AddBullet()
+    {
+        GameObject bullet = m_bulletList.Dequeue ();
+        if (bullet == null) 
+        {
+            Debug.Log ("Null bullet");
+        }
+        if (m_bulletSpawn == null) 
+        {
+            Debug.Log ("Null bullet spawn");
+        }
+        bullet.transform.position = m_bulletSpawn.transform.position;
+        bullet.SetActive (true);
+    }
+
+    public void RemoveBullet(GameObject bullet)
+    {
+        m_bulletList.Enqueue (bullet);
+        bullet.SetActive (false);
     }
 
     public void LoadLevel(string level)
