@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4513557, g: 0.50093555, b: 0.57278675, a: 1}
+  m_IndirectSpecularColor: {r: 0.45135593, g: 0.5009359, b: 0.5727872, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 31552349}
   - component: {fileID: 31552351}
   - component: {fileID: 31552352}
+  - component: {fileID: 31552353}
   m_Layer: 0
   m_Name: wall_bottom
   m_TagString: Untagged
@@ -233,6 +234,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 0.10000017}
   m_EdgeRadius: 0
+--- !u!114 &31552353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 31552347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0cb8c7046fd7451aa39de3b6567ea3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &46219746
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,7 +387,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 84402015}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0557, z: 0}
+  m_LocalPosition: {x: 0, y: 0.161, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 216978693}
@@ -545,6 +557,7 @@ GameObject:
   - component: {fileID: 224402505}
   - component: {fileID: 224402507}
   - component: {fileID: 224402508}
+  - component: {fileID: 224402509}
   m_Layer: 0
   m_Name: wall_top
   m_TagString: Untagged
@@ -653,6 +666,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 0.10000017}
   m_EdgeRadius: 0
+--- !u!114 &224402509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 224402503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0cb8c7046fd7451aa39de3b6567ea3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &254056631
 GameObject:
   m_ObjectHideFlags: 0

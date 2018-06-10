@@ -42,27 +42,11 @@ public class Ball : MonoBehaviour {
 	{
 		//Debug.Log (col.gameObject.name);
 		//AudioSource.PlayClipAtPoint (m_brickHit, transform.position);
-        if (col.gameObject.tag == "Brick") {
-            //collision.gameObject.SendMessage ("ApplyDamage", 10);
-            //Debug.Log ("Brick hit");
-            Brick br = (Brick)col.gameObject.GetComponent<Brick> ();
-            switch (br.m_brickType) {
-            case Brick.BrickType.brick_brown:
-                    //Debug.Log ("brick_brown");
-                break;
-            case Brick.BrickType.brick_red:
-                    //Debug.Log ("brick_red");
-                break;
-            case Brick.BrickType.brick_turquoise:
-                    //Debug.Log ("brick_turquoise");
-                break;
-            case Brick.BrickType.brick_white:
-                    //Debug.Log ("brick_white");
-                break;
-            }
-            m_gameController.UpdateScore (br.m_brickValue);
+        if (col.gameObject.tag == "Brick") 
+		{                       
             m_gameController.RemoveBrick (col.gameObject);
-        } else if (col.gameObject.tag == "Paddle") 
+        } 
+		else if (col.gameObject.tag == "Paddle") 
         {    
             GameObject paddle = col.gameObject;
             Rigidbody2D rb = paddle.GetComponent<Rigidbody2D> ();

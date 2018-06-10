@@ -108,7 +108,8 @@ public class GameController : MonoBehaviour
         Powerup.PowerupType powerup_type = brick_obj.GetPowerup ();
         if (powerup_type != Powerup.PowerupType.powerup_none)
             AddPowerup (brick.transform.position, powerup_type);
-        
+		
+		UpdateScore (brick_obj.m_brickValue);
         Destroy (brick);
         m_brickNumber--;
     }
@@ -125,15 +126,16 @@ public class GameController : MonoBehaviour
     public void RemovePowerup(GameObject powerup)
     {
         Powerup pup = powerup.GetComponent<Powerup> ();
-        if (pup.m_powerupType == Powerup.PowerupType.powerup_balls) {
-            for (int i = 0; i < 3; i++) {   
+        if (pup.m_powerupType == Powerup.PowerupType.powerup_balls) 
+		{
+            for (int i = 0; i < 3; i++) 
+			{   
                 Vector3 pos = m_ball.transform.position;
                 pos.Set (0.0f, 0.0f, pos.z);
-                GameObject ball = Instantiate (m_ball, pos, Quaternion.identity);
-                Ball ball_obj = ball.GetComponent<Ball> ();
-                ball_obj.SetSpeed (-1.0f + (float)i, 1.0f);
+				AddBall (pos,-1.0f + (float)i,1.0f);                
             }
-        } else if (pup.m_powerupType == Powerup.PowerupType.powerup_cannon) 
+        } 
+		else if (pup.m_powerupType == Powerup.PowerupType.powerup_cannon) 
         {
             Debug.Log ("Powerup cannon");
         }
@@ -154,13 +156,28 @@ public class GameController : MonoBehaviour
         }
         bullet.transform.position = m_bulletSpawn.transform.position;
         bullet.SetActive (true);
+		/*Debug*/
+		Bullet bullet_obj = bullet.GetComponent<Bullet> ();
+		bullet_obj.ResetSpeed ();
     }
-
+		
     public void RemoveBullet(GameObject bullet)
     {
         m_bulletList.Enqueue (bullet);
         bullet.SetActive (false);
     }
+
+	public void AddBall(Vector3 pos, float speed_x, float speed_y)
+	{		
+		GameObject ball = Instantiate (m_ball, pos, Quaternion.identity);
+		Ball ball_obj = ball.GetComponent<Ball> ();
+		ball_obj.SetSpeed (speed_x, speed_y);
+	}
+
+	public void RemoveBall(GameObject ball)
+	{
+		//Destroy (ball);
+	}
 
     public void LoadLevel(string level)
     {
