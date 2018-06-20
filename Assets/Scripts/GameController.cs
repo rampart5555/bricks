@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     private GameObject m_ball;
     private GameObject m_bullet;
     private GameObject m_bulletSpawn;
+    private GameObject m_explosionBrick;
     private BrickPrefab m_brickPrefab;
     private PowerupPrefab m_powerupPrefab;
     private Queue<GameObject> m_bulletList;
@@ -51,6 +52,7 @@ public class GameController : MonoBehaviour
         m_powerupPrefab.LoadPrefabs ();
         m_ball = (GameObject)Resources.Load("Prefab/ball", typeof(GameObject));
         m_bulletSpawn = GameObject.FindWithTag ("BulletSpawn");
+        m_explosionBrick = (GameObject)Resources.Load("Prefab/explosion_brick", typeof(GameObject));
         /*bullets */
         m_bulletList = new Queue<GameObject> (10);
         m_bullet = (GameObject)Resources.Load("Prefab/bullet", typeof(GameObject));
@@ -110,7 +112,9 @@ public class GameController : MonoBehaviour
             AddPowerup (brick.transform.position, powerup_type);
 		
 		UpdateScore (brick_obj.m_brickValue);
+        Instantiate (m_explosionBrick, brick.transform.position, brick.transform.rotation);
         Destroy (brick);
+
         m_brickNumber--;
     }
 
