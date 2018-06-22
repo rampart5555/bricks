@@ -9,6 +9,7 @@ public class Paddle : MonoBehaviour {
     private GameController m_gameController;
     private float m_deltaTime;
 	private bool m_cannonAttached;
+    private bool m_ballAttached;
 
 	void Start () 
     {   
@@ -17,6 +18,7 @@ public class Paddle : MonoBehaviour {
         GameObject gc_obj = GameObject.FindWithTag("GameController");
         m_gameController = gc_obj.GetComponent<GameController> ();
 		m_cannonAttached = false;
+        m_ballAttached = true;
 
 	}
 	
@@ -32,7 +34,20 @@ public class Paddle : MonoBehaviour {
             {                   
                 m_targetJoint.target = new Vector2 (hit.point.x, hit.point.y);
             } 
-        }	
+        }
+        else if(Input.GetMouseButtonUp(0))
+        {
+            if (m_ballAttached == true) 
+            {
+                m_ballAttached = false;
+                FixedJoint2D joint = GetComponent<FixedJoint2D> ();
+                if (joint != null) 
+                {
+                    joint.breakForce = 0;
+                    m_gameController.ReleaseBall ();
+                }
+            }
+        }
 		if (m_cannonAttached == true) 
 		{
 			m_deltaTime += Time.deltaTime;

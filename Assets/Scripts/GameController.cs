@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour
     private List<ParticleSystem> m_explosionBrickList;
     private int m_brickNumber;
     private int m_powerupNumber;
+    private int m_ballNumber;
     private int m_score;
 
     float m_deltaTime = 0.000001f;
@@ -204,12 +205,23 @@ public class GameController : MonoBehaviour
 		GameObject ball = Instantiate (m_ball, pos, Quaternion.identity);
 		Ball ball_obj = ball.GetComponent<Ball> ();
 		ball_obj.SetSpeed (speed_x, speed_y);
+        m_ballNumber++;
 	}
 
 	public void RemoveBall(GameObject ball)
-	{
-		//Destroy (ball);
+	{        
+        if (m_ballNumber > 0) 
+        {
+            m_ballNumber--;
+            Destroy (ball);
+        }
 	}
+
+    public void ReleaseBall()
+    {
+        Ball ball_obj = m_ball.GetComponent<Ball> ();
+        ball_obj.SetSpeed (1, 1);       
+    }
 
     public void LoadLevel(string level)
     {

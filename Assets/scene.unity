@@ -407,6 +407,7 @@ GameObject:
   - component: {fileID: 216978697}
   - component: {fileID: 216978698}
   - component: {fileID: 216978699}
+  - component: {fileID: 216978700}
   m_Layer: 0
   m_Name: paddle
   m_TagString: Paddle
@@ -545,6 +546,23 @@ TargetJoint2D:
   m_MaxForce: 10000
   m_DampingRatio: 1
   m_Frequency: 5
+--- !u!255 &216978700
+FixedJoint2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 216978692}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 556481485}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 1
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0.000200808, y: -0.123000026}
+  m_DampingRatio: 0
+  m_Frequency: 0
 --- !u!1 &224402503
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,6 +985,11 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!50 &556481485 stripped
+Rigidbody2D:
+  m_PrefabParentObject: {fileID: 50901432309706766, guid: a5894d96ddb31de438fdf61389fd0832,
+    type: 2}
+  m_PrefabInternal: {fileID: 1209057674}
 --- !u!1 &883195117
 GameObject:
   m_ObjectHideFlags: 0
