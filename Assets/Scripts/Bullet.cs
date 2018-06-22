@@ -30,9 +30,7 @@ public class Bullet : MonoBehaviour
 
 	public void ResetSpeed()
 	{		
-		if (m_rigidBody == null)
-			Debug.Log ("Null rigid body");
-		else
+		if (m_rigidBody != null)			
 			m_rigidBody.velocity = m_speed * m_direction;
 	}
 	

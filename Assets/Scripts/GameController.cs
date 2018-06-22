@@ -13,10 +13,11 @@ public class GameController : MonoBehaviour
     private GameObject m_ball;
     private GameObject m_bullet;
     private GameObject m_bulletSpawn;
-    private GameObject m_explosionBrick;
+    private ParticleSystem m_explosionBrick;
     private BrickPrefab m_brickPrefab;
     private PowerupPrefab m_powerupPrefab;
     private Queue<GameObject> m_bulletList;
+    private List<ParticleSystem> m_explosionBrickList;
     private int m_brickNumber;
     private int m_powerupNumber;
     private int m_score;
@@ -33,7 +34,7 @@ public class GameController : MonoBehaviour
 
     void Update () 
     {
-        m_deltaTime += (Time.unscaledDeltaTime - m_deltaTime) * 0.1f;       
+        m_deltaTime += (Time.unscaledDeltaTime - m_deltaTime) * 0.1f;     
     }
 
     void OnGUI()
@@ -46,17 +47,29 @@ public class GameController : MonoBehaviour
 
     private void LoadPrefab()
     {
+        int i;
+
         m_brickPrefab = new BrickPrefab ();
         m_brickPrefab.LoadPrefabs ();
         m_powerupPrefab = new PowerupPrefab ();
         m_powerupPrefab.LoadPrefabs ();
         m_ball = (GameObject)Resources.Load("Prefab/ball", typeof(GameObject));
         m_bulletSpawn = GameObject.FindWithTag ("BulletSpawn");
-        m_explosionBrick = (GameObject)Resources.Load("Prefab/explosion_brick", typeof(GameObject));
+
+        /* brick explosion */
+        m_explosionBrickList = new List<ParticleSystem>();
+        m_explosionBrick = (ParticleSystem)Resources.Load("Prefab/explosion_brick", typeof(ParticleSystem));
+        for (i = 0; i < 20; i++)
+        {
+            ParticleSystem brick_exp = Instantiate(m_explosionBrick);
+            brick_exp.Stop();
+            m_explosionBrickList.Add(brick_exp);
+        }
+
         /*bullets */
         m_bulletList = new Queue<GameObject> (10);
         m_bullet = (GameObject)Resources.Load("Prefab/bullet", typeof(GameObject));
-        for (int i = 0; i < 10; i++) 
+        for (i = 0; i < 10; i++) 
         {
             GameObject bullet = Instantiate (m_bullet);
             bullet.SetActive (false);
@@ -65,6 +78,20 @@ public class GameController : MonoBehaviour
 
     }
 
+    private void AddBrickExplosion(GameObject brick)
+    {
+        for (int i = 0; i < m_explosionBrickList.Count; i++)
+        {
+            if (m_explosionBrickList[i].IsAlive() == false)
+            {
+                ParticleSystem ps = m_explosionBrickList[i];
+                ps.transform.position = brick.transform.position;
+                ps.transform.rotation = brick.transform.rotation;
+                ps.Play();
+                break;
+            }                
+        }
+    }
 
 	void CameraSizeChange()
 	{
@@ -112,7 +139,8 @@ public class GameController : MonoBehaviour
             AddPowerup (brick.transform.position, powerup_type);
 		
 		UpdateScore (brick_obj.m_brickValue);
-        Instantiate (m_explosionBrick, brick.transform.position, brick.transform.rotation);
+
+        AddBrickExplosion(brick);
         Destroy (brick);
 
         m_brickNumber--;
