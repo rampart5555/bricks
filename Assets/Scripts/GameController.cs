@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour 
-{
-    public Button m_butLoadLevel;
+{    
     public Text m_scoreGUI;
     public Text m_fpsGUI;
 
@@ -22,15 +21,20 @@ public class GameController : MonoBehaviour
     private int m_powerupNumber;
     private int m_ballNumber;
     private int m_score;
-
+    private GameConfig m_gameConfig;
     float m_deltaTime = 0.000001f;
 
 	void Start()
-	{		        
+	{		
+        Debug.Log ("GameController starts\n");
         m_score = 0;
-        m_butLoadLevel.onClick.AddListener(delegate {LoadLevel("level_01");});
 		CameraSizeChange ();
         LoadPrefab ();
+        m_gameConfig = GetComponent<GameConfig> ();
+        Debug.Log (string.Format("level_{0:00}", m_gameConfig.m_currentLevel));
+        m_gameConfig.LoadFile ();
+        string level = string.Format ("level_{0:00}", m_gameConfig.m_currentLevel);
+        LoadLevel (level);
 	}
 
     void Update () 
@@ -226,11 +230,14 @@ public class GameController : MonoBehaviour
     public void LoadLevel(string level)
     {
         TextAsset m_textAsset = Resources.Load("Levels/"+level) as TextAsset;     
-        if (m_textAsset == null) 
-        {            
+        if (m_textAsset == null) {            
             Debug.Log ("File not found\n");
             return;
-        }        
+        } 
+        else 
+        {
+            Debug.Log ("Loading level " + level);
+        }
         ParseTMX tmx = new ParseTMX ();
         tmx.ParseFile (m_textAsset.text);
 
