@@ -9,8 +9,10 @@ public class GameController : MonoBehaviour
     public Text m_fpsGUI;
 
 	public Bounds targetBounds;
-    private GameObject m_ball;
-    private GameObject m_bullet;
+
+    private GameObject m_ballPrefab;
+    private GameObject m_paddlePrefab;
+    private GameObject m_bulletPrefab;
     private GameObject m_bulletSpawn;
     private ParticleSystem m_explosionBrick;
     private BrickPrefab m_brickPrefab;
@@ -24,14 +26,18 @@ public class GameController : MonoBehaviour
     private GameConfig m_gameConfig;
     float m_deltaTime = 0.000001f;
 
+    /*ball and paddle */
+    private List<GameObject> m_ballList;
+    private GameObject m_paddle;
+
 	void Start()
 	{		
         Debug.Log ("GameController starts\n");
         m_score = 0;
 		CameraSizeChange ();
         LoadPrefab ();
+        InstantiatePrefab ();
         m_gameConfig = GetComponent<GameConfig> ();
-        Debug.Log (string.Format("level_{0:00}", m_gameConfig.m_currentLevel));
         m_gameConfig.LoadFile ();
         string level = string.Format ("level_{0:00}", m_gameConfig.m_currentLevel);
         LoadLevel (level);
@@ -58,27 +64,44 @@ public class GameController : MonoBehaviour
         m_brickPrefab.LoadPrefabs ();
         m_powerupPrefab = new PowerupPrefab ();
         m_powerupPrefab.LoadPrefabs ();
-        m_ball = (GameObject)Resources.Load("Prefab/ball", typeof(GameObject));
-        m_bulletSpawn = GameObject.FindWithTag ("BulletSpawn");
 
+        /*ball prefab*/
+        m_ballPrefab = (GameObject)Resources.Load("Prefab/ball", typeof(GameObject));
+        /*paddle prefab*/
+        m_paddlePrefab = (GameObject)Resources.Load("Prefab/paddle", typeof(GameObject));
         /* brick explosion */
-        m_explosionBrickList = new List<ParticleSystem>();
         m_explosionBrick = (ParticleSystem)Resources.Load("Prefab/explosion_brick", typeof(ParticleSystem));
+        /*bullets */
+        m_bulletPrefab = (GameObject)Resources.Load("Prefab/bullet", typeof(GameObject));
+    
+    }
+
+    private void InstantiatePrefab()
+    {
+        int i;
+
+        /*ball*/
+        m_ballList = new List<GameObject>();
+        GameObject ball = Instantiate (m_ballPrefab);
+        m_ballList.Add (ball);
+        /*paddle*/
+        m_paddle = Instantiate (m_paddlePrefab);
+        m_bulletSpawn = GameObject.FindWithTag ("BulletSpawn");
+        /* bullets */
+        m_bulletList = new Queue<GameObject> (10);
+        for (i = 0; i < 10; i++) 
+        {
+            GameObject bullet = Instantiate (m_bulletPrefab);
+            bullet.SetActive (false);
+            m_bulletList.Enqueue (bullet);
+        }
+        /*explosions*/
+        m_explosionBrickList = new List<ParticleSystem>();
         for (i = 0; i < 20; i++)
         {
             ParticleSystem brick_exp = Instantiate(m_explosionBrick);
             brick_exp.Stop();
             m_explosionBrickList.Add(brick_exp);
-        }
-
-        /*bullets */
-        m_bulletList = new Queue<GameObject> (10);
-        m_bullet = (GameObject)Resources.Load("Prefab/bullet", typeof(GameObject));
-        for (i = 0; i < 10; i++) 
-        {
-            GameObject bullet = Instantiate (m_bullet);
-            bullet.SetActive (false);
-            m_bulletList.Enqueue (bullet);
         }
 
     }
@@ -149,6 +172,10 @@ public class GameController : MonoBehaviour
         Destroy (brick);
 
         m_brickNumber--;
+        if (m_brickNumber <= 0) 
+        {
+            LevelComplete ();
+        }
     }
 
     public void AddPowerup(Vector3 pos, Powerup.PowerupType powerup_type)
@@ -167,8 +194,8 @@ public class GameController : MonoBehaviour
 		{
             for (int i = 0; i < 3; i++) 
 			{   
-                Vector3 pos = m_ball.transform.position;
-                pos.Set (0.0f, 0.0f, pos.z);
+                Vector3 pos = new Vector3 ();
+                pos.Set (0.0f, 0.0f, 0.5f);
 				AddBall (pos,-1.0f + (float)i,1.0f);                
             }
         } 
@@ -191,22 +218,23 @@ public class GameController : MonoBehaviour
         {
             Debug.Log ("Null bullet spawn");
         }
-        bullet.transform.position = m_bulletSpawn.transform.position;
+        bullet.transform.position = m_paddle.transform.GetChild(0).position;
         bullet.SetActive (true);
-		/*Debug*/
-		Bullet bullet_obj = bullet.GetComponent<Bullet> ();
-		bullet_obj.ResetSpeed ();
+        Bullet bullet_obj = bullet.GetComponent<Bullet> ();
+        bullet_obj.ResetSpeed ();
+        Debug.LogFormat ("transform: {0} {1} {2}", bullet.transform.position.x, bullet.transform.position.y, bullet.transform.position.z);
     }
 		
     public void RemoveBullet(GameObject bullet)
     {
         m_bulletList.Enqueue (bullet);
         bullet.SetActive (false);
+
     }
 
 	public void AddBall(Vector3 pos, float speed_x, float speed_y)
 	{		
-		GameObject ball = Instantiate (m_ball, pos, Quaternion.identity);
+        GameObject ball = Instantiate (m_ballPrefab, pos, Quaternion.identity);
 		Ball ball_obj = ball.GetComponent<Ball> ();
 		ball_obj.SetSpeed (speed_x, speed_y);
         m_ballNumber++;
@@ -223,12 +251,13 @@ public class GameController : MonoBehaviour
 
     public void ReleaseBall()
     {
-        Ball ball_obj = m_ball.GetComponent<Ball> ();
+        Debug.Log ("ReleaseBall");
+        Ball ball_obj = m_ballList[0].GetComponent<Ball> ();
         ball_obj.SetSpeed (1, 1);       
     }
 
     public void LoadLevel(string level)
-    {
+    {        
         TextAsset m_textAsset = Resources.Load("Levels/"+level) as TextAsset;     
         if (m_textAsset == null) {            
             Debug.Log ("File not found\n");
@@ -259,6 +288,11 @@ public class GameController : MonoBehaviour
     {
         m_score += score;
         m_scoreGUI.text = "Score " + m_score;
+    }
+
+    private void LevelComplete()
+    {
+        Debug.Log ("LevelComplete");
     }
 }
 

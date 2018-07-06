@@ -26,8 +26,7 @@ public class Paddle : MonoBehaviour {
 	void Update () 
     {        
         if (Input.GetMouseButton(0)) 
-        {                        
-            //Debug.Log ("Mouse click");
+        {                                    
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast (ray, out hit)) 
