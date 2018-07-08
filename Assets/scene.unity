@@ -1146,9 +1146,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8d19aa8e4bd9534dbc2cda68e217bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_totalScore: 0
-  m_currentLevel: 0
-  m_lives: 0
+  m_gameData:
+    m_totalScore: 0
+    m_currentLevel: 1
+    m_lives: 3
 --- !u!1 &1664187883
 GameObject:
   m_ObjectHideFlags: 0

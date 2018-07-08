@@ -23,7 +23,7 @@ public class Paddle : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
     {        
         if (Input.GetMouseButton(0)) 
         {                                    
@@ -43,7 +43,7 @@ public class Paddle : MonoBehaviour {
                 if (joint != null) 
                 {
                     joint.breakForce = 0;
-                    m_gameController.ReleaseBall ();
+                    m_gameController.PaddleReleaseBall ();
                 }
             }
         }

@@ -34,12 +34,14 @@ public class GameController : MonoBehaviour
 	{		
         Debug.Log ("GameController starts\n");
         m_score = 0;
+        m_ballNumber = 0;
+        m_brickNumber = 0;
 		CameraSizeChange ();
         LoadPrefab ();
         InstantiatePrefab ();
         m_gameConfig = GetComponent<GameConfig> ();
         m_gameConfig.LoadFile ();
-        string level = string.Format ("level_{0:00}", m_gameConfig.m_currentLevel);
+        string level = string.Format ("level_{0:00}", m_gameConfig.m_gameData.m_currentLevel);
         LoadLevel (level);
 	}
 
@@ -57,8 +59,7 @@ public class GameController : MonoBehaviour
     }
 
     private void LoadPrefab()
-    {
-        int i;
+    {        
 
         m_brickPrefab = new BrickPrefab ();
         m_brickPrefab.LoadPrefabs ();
@@ -86,7 +87,14 @@ public class GameController : MonoBehaviour
         m_ballList.Add (ball);
         /*paddle*/
         m_paddle = Instantiate (m_paddlePrefab);
+
+        /* atach ball to paddle*/
+        FixedJoint2D tj = m_paddle.GetComponent<FixedJoint2D>();
+        tj.connectedBody = ball.GetComponent<Rigidbody2D>();
+
+        /*Bullet spawn LocationInfo*/
         m_bulletSpawn = GameObject.FindWithTag ("BulletSpawn");
+
         /* bullets */
         m_bulletList = new Queue<GameObject> (10);
         for (i = 0; i < 10; i++) 
@@ -136,7 +144,7 @@ public class GameController : MonoBehaviour
 			Camera.main.orthographicSize = targetBounds.size.y / 2 * differenceInSize;
 		}
 		transform.position = new Vector3(targetBounds.center.x, targetBounds.center.y, -1f);
-		string str = string.Format ("CameraSize: {0}", Camera.main.orthographicSize);
+		//string str = string.Format ("CameraSize: {0}", Camera.main.orthographicSize);
 	}
 
     void AddBrick(int  i, int j, int brick_id, int powerup_id)
@@ -222,7 +230,7 @@ public class GameController : MonoBehaviour
         bullet.SetActive (true);
         Bullet bullet_obj = bullet.GetComponent<Bullet> ();
         bullet_obj.ResetSpeed ();
-        Debug.LogFormat ("transform: {0} {1} {2}", bullet.transform.position.x, bullet.transform.position.y, bullet.transform.position.z);
+
     }
 		
     public void RemoveBullet(GameObject bullet)
@@ -249,18 +257,20 @@ public class GameController : MonoBehaviour
         }
 	}
 
-    public void ReleaseBall()
+    public void PaddleReleaseBall()
     {
         Debug.Log ("ReleaseBall");
-        Ball ball_obj = m_ballList[0].GetComponent<Ball> ();
-        ball_obj.SetSpeed (1, 1);       
+
+        AddBall(m_ballList[0].transform.position, 1.0f, 1.0f);
+        Destroy (m_ballList[0]);
+
     }
 
     public void LoadLevel(string level)
     {        
         TextAsset m_textAsset = Resources.Load("Levels/"+level) as TextAsset;     
         if (m_textAsset == null) {            
-            Debug.Log ("File not found\n");
+            Debug.LogErrorFormat("File not found {0}",level);
             return;
         } 
         else 
@@ -361,7 +371,7 @@ class PowerupPrefab
             GameObject powerup = (GameObject)Resources.Load(entry.Value, typeof(GameObject));
             if (powerup == null) 
             {
-                Debug.LogWarningFormat("Prefab not found:{} ",entry.Value);
+                Debug.LogWarningFormat("Prefab not found:{0} ",entry.Value);
                 continue;
             }
             m_powerupMap.Add (entry.Key, powerup);

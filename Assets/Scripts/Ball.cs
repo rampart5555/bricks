@@ -13,12 +13,12 @@ public class Ball : MonoBehaviour {
     private bool m_directionChanged;
     private float m_reflectionAngle;
     private ContactPoint2D[] m_contacts;
-    private Rigidbody2D m_rigidBody;
+
 	void Start () 
     {    
         GameObject gc_obj = GameObject.FindWithTag("GameController");
         m_gameController = gc_obj.GetComponent<GameController> ();
-        m_rigidBody = GetComponent<Rigidbody2D> ();
+
         PI_2 = Mathf.PI / 2.0f;
         PI_3 = Mathf.PI / 3.0f;
         m_directionChanged = false;
@@ -34,7 +34,7 @@ public class Ball : MonoBehaviour {
     {       
         m_direction.Set (x, y);
         m_direction.Normalize ();
-        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+        Rigidbody2D rb = GetComponent<Rigidbody2D> ();
         rb.velocity=m_direction*m_speed;
     }
 
