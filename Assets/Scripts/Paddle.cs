@@ -21,8 +21,7 @@ public class Paddle : MonoBehaviour {
         m_ballAttached = true;
 
 	}
-	
-	// Update is called once per frame
+		
 	void FixedUpdate () 
     {        
         if (Input.GetMouseButton(0)) 
@@ -58,6 +57,7 @@ public class Paddle : MonoBehaviour {
 			}
 		}
 	}
+
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Powerup") 
@@ -67,7 +67,8 @@ public class Paddle : MonoBehaviour {
 			{
 				m_cannonAttached = true;
 			}
-            m_gameController.RemovePowerup (col.gameObject);
+            //m_gameController.RemovePowerup (col.gameObject);
+            col.gameObject.SetActive(false);
         }
     }
 }

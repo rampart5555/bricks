@@ -23,7 +23,8 @@ public class Bullet : MonoBehaviour
 	{
 		if (col.gameObject.tag == "Brick") 
 		{
-			m_gameController.RemoveBrick (col.gameObject);
+			//m_gameController.RemoveBrick (col.gameObject);
+            col.gameObject.SetActive(false);
 			m_gameController.RemoveBullet (gameObject);
 		}
 	}
