@@ -128,7 +128,16 @@ public class GameController : MonoBehaviour
             }                
         }
     }
-
+    void PerspectiveCameraDistance()
+    {
+        //3.0 is the height of the biggest object
+	float frustumHeight = 3.0f / Camera.main.aspect;
+	// Compute the distance the camera should be to fit the entire bounding sphere
+	float distance = frustumHeight * 0.5f / Mathf.Tan(Camera.main.fieldOfView * 0.5f * Mathf.Deg2Rad);
+	Camera.main.transform.position=new Vector3(0.0f,0.0f,-distance);
+	Debug.Log(Camera.main.aspect);
+	Debug.Log(frustumHeight);
+    }
 	void CameraSizeChange()
 	{
 		float screenRatio = (float)Screen.width / (float)Screen.height;
