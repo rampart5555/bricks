@@ -29,10 +29,14 @@ public class GameController : MonoBehaviour
     /*ball and paddle */
     private List<GameObject> m_ballList;
     private GameObject m_paddle;
+    /* store bricks and powerup game objects 
+     * if the game objects are marked for deletion then remove them
+     */
+    private List<GameObject> m_cacheList;
 
-	void Start()
+	void Awake()
 	{		
-        Debug.Log ("GameController starts\n");
+        Debug.Log ("GameController awake\n");
         m_score = 0;
         m_ballNumber = 0;
         m_brickNumber = 0;
@@ -42,19 +46,57 @@ public class GameController : MonoBehaviour
         m_gameConfig = GetComponent<GameConfig> ();
         m_gameConfig.LoadFile ();
         string level = string.Format ("level_{0:00}", m_gameConfig.m_gameData.m_currentLevel);
+        m_cacheList = new List<GameObject> ();
         LoadLevel (level);
 	}
 
-    void Update () 
+    void FixedUpdate () 
     {
-        m_deltaTime += (Time.unscaledDeltaTime - m_deltaTime) * 0.1f;     
+        m_deltaTime += (Time.unscaledDeltaTime - m_deltaTime) * 0.1f;   
+        for (int i = m_cacheList.Count - 1; i >= 0; i--) 
+        {
+            GameObject go = m_cacheList [i];
+            if (go.activeSelf == false) 
+            {
+                HandleRemove(go);
+                Destroy (go);
+                m_cacheList.RemoveAt (i);
+            }
+        }
+    }
+
+    bool HandleRemove(GameObject go)
+    {
+        switch (go.tag)
+        {
+            case "Brick":
+                {
+                    RemoveBrick(go);              
+                    if (m_brickNumber <= 0)
+                    {
+                        LevelComplete();
+                    }
+                }    
+                break;
+            case "Powerup":
+                {
+                    RemovePowerup(go);
+                }   
+                break;
+            default:
+                {
+                    Debug.Log("No object to remove");
+                }
+                break;
+        }
+        return true;
     }
 
     void OnGUI()
     {
         float msec = m_deltaTime * 1000.0f;
         float fps = 1.0f / m_deltaTime;
-        string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);  
+        string text = string.Format("{0:0.0} ms ({1:0.} fps)\n Entities:{2:0.0}", msec, fps,m_cacheList.Count);  
         m_fpsGUI.text = text;
     }
 
@@ -168,8 +210,8 @@ public class GameController : MonoBehaviour
             return;
         
         GameObject brick_obj=Instantiate (brick, new Vector3 (x, y, 0.07f), Quaternion.identity) as GameObject;
+        m_cacheList.Add (brick_obj);
         m_brickNumber++;
-
         if (powerup_type != Powerup.PowerupType.powerup_none) 
         {               
             brick_obj.GetComponent<Brick> ().m_powerupType = powerup_type;
@@ -178,34 +220,31 @@ public class GameController : MonoBehaviour
            
     public void RemoveBrick(GameObject brick)
     {
+        //brick.SetActive(true);
         Brick brick_obj = brick.GetComponent<Brick> ();
         Powerup.PowerupType powerup_type = brick_obj.GetPowerup ();
         if (powerup_type != Powerup.PowerupType.powerup_none)
             AddPowerup (brick.transform.position, powerup_type);
 		
 		UpdateScore (brick_obj.m_brickValue);
-
         AddBrickExplosion(brick);
-        Destroy (brick);
-
         m_brickNumber--;
-        if (m_brickNumber <= 0) 
-        {
-            LevelComplete ();
-        }
+
     }
 
     public void AddPowerup(Vector3 pos, Powerup.PowerupType powerup_type)
     {       
-        GameObject powerup = m_powerupPrefab.GetPrefab(powerup_type);
-        if (powerup == null)
+        Debug.LogFormat ("Add powerup {0}",powerup_type);
+        GameObject powerup_prefab = m_powerupPrefab.GetPrefab(powerup_type);
+        if (powerup_prefab == null)
             return;        
-        Instantiate (powerup, pos, Quaternion.identity);
+        GameObject powerup = (GameObject)Instantiate (powerup_prefab, pos, Quaternion.identity);
+        m_cacheList.Add (powerup);
         m_powerupNumber++;
     }
 
     public void RemovePowerup(GameObject powerup)
-    {
+    {        
         Powerup pup = powerup.GetComponent<Powerup> ();
         if (pup.m_powerupType == Powerup.PowerupType.powerup_balls) 
 		{
@@ -216,11 +255,8 @@ public class GameController : MonoBehaviour
 				AddBall (pos,-1.0f + (float)i,1.0f);                
             }
         } 
-		else if (pup.m_powerupType == Powerup.PowerupType.powerup_cannon) 
-        {
-            Debug.Log ("Powerup cannon");
-        }
-        Destroy (powerup);
+		
+        Debug.LogFormat("Remove powerup {0}",powerup.tag);
         m_powerupNumber--;
     }
 

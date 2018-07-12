@@ -15,14 +15,15 @@ public class Brick : MonoBehaviour
 
     public BrickType m_brickType;
     public int m_brickValue;
-
     public Powerup.PowerupType m_powerupType;
 
-	void Start()
+
+	void Awake()
 	{
 		//string txt = string.Format ("entity type {0}", m_brickType);
 		//Debug.Log (txt);
         //m_powerupType = Powerup.PowerupType.powerup_none;
+    
 	}  
 
     public void SetPowerup(Powerup.PowerupType powerup)
@@ -33,7 +34,7 @@ public class Brick : MonoBehaviour
     public Powerup.PowerupType GetPowerup()
     {
         return m_powerupType;
-    }
+    }           
 }
 
 
