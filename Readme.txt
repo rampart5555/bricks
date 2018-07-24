@@ -1,16 +1,12 @@
-Export fbx from blender
-1.Set the back view with ctrl+1
-2 set bone orientation hed->tail to +Y
-2.Export fbx 
-    -Z Forward
-     Y Up
-     Uncheck small button on the right of the scale
-     Don't Apply Transform, the armature will be scaled to 100
-     In unity rotate Armature and root bone to 0 
-     
-3. For animation 
-    3.1 uncheck 
-        NLA Strip 
-        All Actions
-    3.2 use NLA editor to change animation order and time
-        
+Tools:
+Blender 2.79b
+Unity 2017.4.2f2
+In blender
+- CTRL+1 to switch to back view
+- If the mesh has Armature ensure that bones has roll of 0 (in edit mode)
+- Bone orientation head->tail on +Z axis
+- For meshes without armature, in unity -> reset transform and rotate on Y axe with 180 degree
+- For meshes with armature, in unity-> reset rotation transform for all bones and set rotation for Armature on Z axe with -90 degree
+- Save as blender file in Prefabs
+
+
