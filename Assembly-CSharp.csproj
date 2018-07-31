@@ -51,22 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Ball.cs" />
-     <Compile Include="Assets\Scripts\Brick.cs" />
-     <Compile Include="Assets\Scripts\Bullet.cs" />
-     <Compile Include="Assets\Scripts\CameraChange.cs" />
-     <Compile Include="Assets\Scripts\FPS.cs" />
-     <Compile Include="Assets\Scripts\GameConfig.cs" />
-     <Compile Include="Assets\Scripts\GameController.cs" />
-     <Compile Include="Assets\Scripts\GameData.cs" />
-     <Compile Include="Assets\Scripts\MainMenu.cs" />
-     <Compile Include="Assets\Scripts\Paddle.cs" />
-     <Compile Include="Assets\Scripts\ParseTMX.cs" />
-     <Compile Include="Assets\Scripts\Powerup.cs" />
-     <Compile Include="Assets\Scripts\Wall.cs" />
-     <None Include="Assets\Resources\Levels\level_02.xml" />
-     <None Include="Assets\Resources\Levels\level_01.xml" />
-     <None Include="Assets\Scripts\Readme.txt" />
+     <Compile Include="Assets\AssetsCreateAnim.cs" />
+     <Compile Include="Assets\BoneMove.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
