@@ -27,11 +27,11 @@ public class AssetsCreateAnim: MonoBehaviour
 {
     Animation m_animation;
     AnimationClip m_doorLeft;
-    bool m_toggle;
+
     void Start()
-    {
-        m_toggle = false;
-        CreateAnimationCurve();
+    {     
+        AnimationLevelStart();
+        AnimatioPaddleLost(3);
 
     }
     void Update()
@@ -42,7 +42,7 @@ public class AssetsCreateAnim: MonoBehaviour
     public void PlayAnimation()
     {       
         //AnimationState m_state = m_animation["level_start"];
-        m_animation.Play("level_start");         
+        m_animation.Play("paddle_restore_3");         
     }
 
     public void CreateAnimationCurve(AnimationClip clip, string obj_name, float[] cp_list)
@@ -61,29 +61,39 @@ public class AssetsCreateAnim: MonoBehaviour
         }       
     }
 
-    public void CreateAnimationCurve()
+    public void AnimationLevelStart()
     {   
         Dictionary<string,float[]> anim_dict = new Dictionary<string,float[]>();
-        GameObject doorLeft = GameObject.Find("door_left");
-        Vector3 pos = doorLeft.transform.localPosition;
+        Vector3 go_from,go_to;
+        /* door left*/
+        go_from =  GameObject.Find("door_left").transform.localPosition;
         float[] door_left_keys = 
         {
-            0.0f, pos.x, pos.y, pos.z,
-            1.0f, pos.x, pos.y+2.7f, pos.z,
-            1.5f, pos.x, pos.y+2.7f, pos.z, 
-            2.0f, pos.x, pos.y, pos.z
+                0.0f, go_from.x, go_from.y, go_from.z,
+                1.0f, go_from.x, go_from.y+2.7f, go_from.z,
+                1.5f, go_from.x, go_from.y+2.7f, go_from.z, 
+                2.0f, go_from.x, go_from.y, go_from.z
         };
-        
-        Vector3 go_from = GameObject.Find("paddle_slot_0").transform.localPosition;
-        Vector3 go_to = GameObject.Find("paddle_start_pos").transform.localPosition;
+        anim_dict.Add("door_left", door_left_keys);
+        /*paddle*/
+        go_from = GameObject.Find("paddle_slot_0").transform.localPosition;
+        go_to = GameObject.Find("paddle_start_pos").transform.localPosition;
         float [] paddle_mesh_0_keys={
             1.0f, go_from.x, go_from.y, go_from.z,
             1.5f, go_to.x, go_to.y, go_to.z
         };               
-        anim_dict.Add("door_left", door_left_keys);
         anim_dict.Add("paddle_mesh_0", paddle_mesh_0_keys);
+        /*ball*/
+        go_from = GameObject.Find("ball_slot_0").transform.localPosition;
+        go_to = GameObject.Find("ball_start_pos").transform.localPosition;
+        float [] ball_mesh_keys={
+            1.5f, go_from.x, go_from.y, go_from.z,
+            1.9f, go_to.x, go_to.y, go_to.z
+        }; 
 
-        AnimationClip clip=new AnimationClip();
+        anim_dict.Add("ball_mesh", ball_mesh_keys);
+
+        AnimationClip clip = new AnimationClip();
         clip.legacy=true;
         clip.name="level_start";
         foreach(KeyValuePair<string, float[]> entry in anim_dict)
@@ -96,5 +106,43 @@ public class AssetsCreateAnim: MonoBehaviour
         //AssetDatabase.CreateAsset(clip, "Assets/anim.anim");
         //AssetDatabase.SaveAssets();
 
+    }
+
+    public void AnimatioPaddleLost(int paddle_slot_index)
+    {
+        Dictionary<string,float[]> anim_dict = new Dictionary<string,float[]>();
+        Vector3 go_from,go_to;
+
+        /*paddle restore index*/
+        string paddle_slot = string.Format("paddle_slot_{0}", paddle_slot_index);
+        string paddle_mesh = string.Format("paddle_mesh_{0}", paddle_slot_index);
+        string paddle_restore = string.Format("paddle_restore_{0}", paddle_slot_index);
+        go_from =  GameObject.Find(paddle_slot).transform.localPosition;
+        go_to = GameObject.Find("paddle_start_pos").transform.localPosition;
+        float [] paddle_mesh_keys={
+            0.0f, go_from.x, go_from.y, go_from.z,
+            0.5f, go_from.x, go_from.y, go_from.z - 0.5f,
+            1.5f, go_to.x, go_to.y, go_to.z - 0.5f,
+            2.0f, go_to.x, go_to.y, go_to.z
+        }; 
+        anim_dict.Add(paddle_mesh, paddle_mesh_keys);
+        /*ball*/
+        go_from = GameObject.Find("ball_slot_0").transform.localPosition;
+        go_to = GameObject.Find("ball_start_pos").transform.localPosition;
+        float [] ball_mesh_keys={
+            2.0f, go_from.x, go_from.y, go_from.z,
+            2.5f, go_to.x, go_to.y, go_to.z
+        }; 
+        anim_dict.Add("ball_mesh", ball_mesh_keys);
+
+        AnimationClip clip = new AnimationClip();
+        clip.legacy=true;
+        clip.name=paddle_restore;
+        foreach(KeyValuePair<string, float[]> entry in anim_dict)
+        {
+            CreateAnimationCurve(clip,entry.Key, entry.Value);
+        }
+        m_animation= GetComponent<Animation>();
+        m_animation.AddClip(clip,paddle_restore);
     }
 }
