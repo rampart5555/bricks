@@ -2,28 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-/*
-{
-    {"door_left",{0.0f,i_pos.x, i_pos.y, i_pos.z}},
-    {"door_left",{1.0f,t_pos.x, t_pos.y, t_pos.z}},
-}
-*/
-public struct ControlPoint
-{    
-    
-    public float  m_time;
-    public float[] vec3;
-    public ControlPoint(float time, float x,float y, float z)
-    {
-        m_time = time;
-        vec3 = new float[3];
-        vec3[0] = x;
-        vec3[1] = y;
-        vec3[2] = z;
-    }
-};
 
-public class AssetsCreateAnim: MonoBehaviour
+public class AnimationController: MonoBehaviour
 {
     Animation m_animation;
     AnimationClip m_doorLeft;
@@ -32,17 +12,21 @@ public class AssetsCreateAnim: MonoBehaviour
     {     
         AnimationLevelStart();
         AnimatioPaddleLost(3);
+        AnimationLevelComplete();
 
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
             PlayAnimation();
     }
+
     public void PlayAnimation()
     {       
         //AnimationState m_state = m_animation["level_start"];
-        m_animation.Play("paddle_restore_3");         
+        //m_animation.Play("level_complete");         
+        m_animation.Play("level_start");         
     }
 
     public void CreateAnimationCurve(AnimationClip clip, string obj_name, float[] cp_list)
@@ -61,20 +45,61 @@ public class AssetsCreateAnim: MonoBehaviour
         }       
     }
 
+    public void AddAnimationClip(string clip_name, float event_time, Dictionary<string,float[]> anim_keys)
+    {
+        AnimationClip clip = new AnimationClip();
+        clip.legacy=true;
+        clip.name=clip_name;
+        foreach(KeyValuePair<string, float[]> entry in anim_keys)
+        {
+            CreateAnimationCurve(clip,entry.Key, entry.Value);
+        }
+        AnimationEvent evt;
+        evt = new AnimationEvent();
+        evt.time = event_time;
+        evt.functionName = "AnimationCompleted";
+        evt.stringParameter = clip_name;
+        clip.AddEvent(evt);
+        m_animation= GetComponent<Animation>();
+        m_animation.AddClip(clip, clip_name);
+    }
+
+    public void AnimationLevelComplete()
+    {        
+        Dictionary<string,float[]> anim_dict = new Dictionary<string,float[]>();
+        Vector3 go_from;
+        go_from =  GameObject.Find("door_right").transform.localPosition;
+        float[] door_right_keys = 
+            {
+                0.0f, go_from.x, go_from.y, go_from.z,
+                5.0f, go_from.x, go_from.y+0.5f, go_from.z,
+            };
+        anim_dict.Add("door_right", door_right_keys);
+        AddAnimationClip("level_complete", 4.95f, anim_dict);
+
+    }
+
+    public void AnimationCompleted(string animation)
+    {
+        Debug.LogFormat("Animation complete:{0}",animation);
+    }
+
     public void AnimationLevelStart()
     {   
         Dictionary<string,float[]> anim_dict = new Dictionary<string,float[]>();
         Vector3 go_from,go_to;
+
         /* door left*/
         go_from =  GameObject.Find("door_left").transform.localPosition;
         float[] door_left_keys = 
         {
                 0.0f, go_from.x, go_from.y, go_from.z,
-                1.0f, go_from.x, go_from.y+2.7f, go_from.z,
-                1.5f, go_from.x, go_from.y+2.7f, go_from.z, 
+                1.0f, go_from.x, go_from.y+0.5f, go_from.z,
+                1.5f, go_from.x, go_from.y+0.5f, go_from.z, 
                 2.0f, go_from.x, go_from.y, go_from.z
         };
         anim_dict.Add("door_left", door_left_keys);
+
         /*paddle*/
         go_from = GameObject.Find("paddle_slot_0").transform.localPosition;
         go_to = GameObject.Find("paddle_start_pos").transform.localPosition;
@@ -83,6 +108,7 @@ public class AssetsCreateAnim: MonoBehaviour
             1.5f, go_to.x, go_to.y, go_to.z
         };               
         anim_dict.Add("paddle_mesh_0", paddle_mesh_0_keys);
+
         /*ball*/
         go_from = GameObject.Find("ball_slot_0").transform.localPosition;
         go_to = GameObject.Find("ball_start_pos").transform.localPosition;
@@ -93,15 +119,7 @@ public class AssetsCreateAnim: MonoBehaviour
 
         anim_dict.Add("ball_mesh", ball_mesh_keys);
 
-        AnimationClip clip = new AnimationClip();
-        clip.legacy=true;
-        clip.name="level_start";
-        foreach(KeyValuePair<string, float[]> entry in anim_dict)
-        {
-            CreateAnimationCurve(clip,entry.Key, entry.Value);
-        }
-        m_animation= GetComponent<Animation>();
-        m_animation.AddClip(clip, "level_start");
+        AddAnimationClip("level_start", 1.95f, anim_dict);
 
         //AssetDatabase.CreateAsset(clip, "Assets/anim.anim");
         //AssetDatabase.SaveAssets();
@@ -135,14 +153,6 @@ public class AssetsCreateAnim: MonoBehaviour
         }; 
         anim_dict.Add("ball_mesh", ball_mesh_keys);
 
-        AnimationClip clip = new AnimationClip();
-        clip.legacy=true;
-        clip.name=paddle_restore;
-        foreach(KeyValuePair<string, float[]> entry in anim_dict)
-        {
-            CreateAnimationCurve(clip,entry.Key, entry.Value);
-        }
-        m_animation= GetComponent<Animation>();
-        m_animation.AddClip(clip,paddle_restore);
+        AddAnimationClip(paddle_restore, 2.45f, anim_dict);
     }
 }
