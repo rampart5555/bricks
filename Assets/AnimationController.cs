@@ -18,8 +18,11 @@ public class AnimationController: MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Play animation");
             PlayAnimation();
+        }
     }
 
     public void PlayAnimation()
@@ -154,5 +157,5 @@ public class AnimationController: MonoBehaviour
         anim_dict.Add("ball_mesh", ball_mesh_keys);
 
         AddAnimationClip(paddle_restore, 2.45f, anim_dict);
-    }
+    }        
 }
