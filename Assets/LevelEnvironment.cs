@@ -3,33 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class AnimationController: MonoBehaviour
+public class LevelEnvironment: MonoBehaviour
 {
     Animation m_animation;
     AnimationClip m_doorLeft;
 
-    void Start()
-    {     
+    void Awake()
+    {
         AnimationLevelStart();
         AnimatioPaddleLost(3);
         AnimationLevelComplete();
+    }
+
+    void Start()
+    {     
+     
 
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Play animation");
-            PlayAnimation();
-        }
+        
     }
 
-    public void PlayAnimation()
+    public void PlayAnimation(string anim_name)
     {       
         //AnimationState m_state = m_animation["level_start"];
         //m_animation.Play("level_complete");         
-        m_animation.Play("level_start");         
+        //m_animation.Play("level_start");         
+        m_animation.Play(anim_name);         
     }
 
     public void CreateAnimationCurve(AnimationClip clip, string obj_name, float[] cp_list)
@@ -59,7 +61,7 @@ public class AnimationController: MonoBehaviour
         }
         AnimationEvent evt;
         evt = new AnimationEvent();
-        evt.time = event_time;
+        evt.time = clip.length-0.1f;
         evt.functionName = "AnimationCompleted";
         evt.stringParameter = clip_name;
         clip.AddEvent(evt);

@@ -6,15 +6,23 @@ using UnityEngine.SceneManagement;
 public class GamePortal : MonoBehaviour {
 
     Animation m_animation;
+    GameController m_gameController;
+    void Awake()
+    {
+        Debug.Log("GamePortal.Awake");
+        CreateAnimations();
 
+    }
 	// Use this for initialization
 	void Start () 
     {        
-        CreateAnimation();
-        StartGame();
+        Debug.Log("GamePortal.Start");
+        GameObject gcObj = GameObject.FindGameObjectWithTag("GameController");
+        m_gameController=gcObj.GetComponent<GameController>();
+
 	}
 
-    void StartGame()
+    public void PortalOpen()
     {        
         AnimationState state= m_animation["game_portal_open"];
         state.time = 0;
@@ -22,7 +30,7 @@ public class GamePortal : MonoBehaviour {
         m_animation.Play("game_portal_open");
     }
 
-    void NextLevel()
+    public void PortalClose()
     {
         AnimationState state= m_animation["game_portal_open"];
         state.time = state.length;
@@ -46,7 +54,7 @@ public class GamePortal : MonoBehaviour {
         }       
     }
 
-    void CreateAnimation()
+    void CreateAnimations()
     {   
         Vector3 go_from;
 
@@ -57,16 +65,32 @@ public class GamePortal : MonoBehaviour {
         go_from = GameObject.Find("game_portal_top").transform.position;
         float[] gpo_top_keys = {
                 0.0f, go_from.x, go_from.y, go_from.z,
-                1.0f, go_from.x, go_from.y + dist, go_from.z,
+                0.5f, go_from.x, go_from.y, go_from.z,
+                3.0f, go_from.x, go_from.y + dist, go_from.z,
             };
         CreateAnimationCurve(clip,"game_portal_top",gpo_top_keys);
         go_from = GameObject.Find("game_portal_bottom").transform.position;
         float[] gpo_bottom_keys = {
                 0.0f, go_from.x, go_from.y, go_from.z,
-                1.0f, go_from.x, go_from.y - dist, go_from.z,
+                0.5f, go_from.x, go_from.y, go_from.z,
+                3.0f, go_from.x, go_from.y - dist, go_from.z,
             };
         CreateAnimationCurve(clip,"game_portal_bottom",gpo_bottom_keys);
+
+        AnimationEvent evt;
+        evt = new AnimationEvent();
+        evt.time = clip.length-0.1f;
+        evt.functionName = "AnimationComplete";
+        evt.stringParameter = clip.name;
+        clip.AddEvent(evt);
+
         m_animation = GetComponent<Animation>();
         m_animation.AddClip(clip,clip.name);
+    }
+
+    public void AnimationComplete(string animation)
+    {
+        Debug.LogFormat("GamePortal.AnimationComplete {0}",animation);
+        m_gameController.AnimationComplete(animation);
     }
 }
