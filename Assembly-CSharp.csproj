@@ -51,10 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Ball.cs" />
      <Compile Include="Assets\GameController.cs" />
      <Compile Include="Assets\GamePortal.cs" />
      <Compile Include="Assets\LevelEnvironment.cs" />
      <Compile Include="Assets\MainMenu.cs" />
+     <Compile Include="Assets\Paddle.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/home/dcioata/Unity-2017.4.2f2/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

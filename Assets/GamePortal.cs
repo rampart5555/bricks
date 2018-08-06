@@ -23,11 +23,14 @@ public class GamePortal : MonoBehaviour {
 	}
 
     public void PortalOpen()
-    {        
-        AnimationState state= m_animation["game_portal_open"];
-        state.time = 0;
-        state.speed = 1;
-        m_animation.Play("game_portal_open");
+    {     
+        if (m_animation != null)
+        {
+            AnimationState state = m_animation["game_portal_open"];
+            state.time = 0;
+            state.speed = 1;
+            m_animation.Play("game_portal_open");
+        }
     }
 
     public void PortalClose()
