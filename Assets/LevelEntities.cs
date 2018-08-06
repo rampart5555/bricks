@@ -15,29 +15,26 @@ public class LevelEntities : MonoBehaviour
         m_ball.gameObject.SetActive(false);
     }
 
-    void FixedUpdate ()
-    {   
-        if (m_paddle.m_ballStatus==Paddle.BallStatus.BallReleased)
+    public void MouseRelease()
+    {
+        if (m_paddle.m_ballStatus == Paddle.BallStatus.BallReleased)
         {
             m_paddle.m_ballStatus = Paddle.BallStatus.BallRunning;
             m_ball.SetSpeed(0.0f, 1.0f);
             Debug.Log("Ball is running");
         }
 
-        if (Input.GetMouseButton(0))
-        {                                    
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {  
-                m_paddle.PaddleMove(hit.point);
-            } 
-        }
-        else if (Input.GetMouseButtonUp(0))
+        if (m_paddle.m_ballStatus == Paddle.BallStatus.BallAttached)
         {
             m_paddle.BallRelease();
         }
     }
+
+    public void MouseDrag(Vector2 pos)
+    {        
+        m_paddle.PaddleMove(pos);
+    }
+           
     public void EnablePaddleBall()
     {
         Debug.Log("LevelEntities.EnablePaddleBall");

@@ -25,6 +25,19 @@ public class GameController : MonoBehaviour {
 
 	}
 
+    void Update()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {                                    
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {  
+                Debug.Log(hit.transform.name);
+            } 
+        }
+    }
+
     public void AnimationComplete(string anim_name)
     {
         Debug.LogFormat("GameController.AnimationComplete {0}",anim_name);
@@ -38,5 +51,22 @@ public class GameController : MonoBehaviour {
             m_levelEntities.EnablePaddleBall();
             m_levelEnvironment.DisablePaddleBall();
         }            
+    }
+
+    void FixedUpdate ()
+    {
+        if (Input.GetMouseButton(0))
+        {                                    
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {  
+                m_levelEntities.MouseDrag(hit.point);
+            } 
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            m_levelEntities.MouseRelease();
+        }
     }
 }
