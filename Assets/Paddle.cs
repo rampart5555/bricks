@@ -1,15 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Paddle : MonoBehaviour {
 
 	// Use this for initialization
+    public enum BallStatus {
+        BallAttached=0,
+        BallReleased,
+        BallRunning
+    };
+
+    public  BallStatus m_ballStatus;
     private TargetJoint2D m_targetJoint;
     private GameController m_gameController;
     private float m_deltaTime;
 	private bool m_cannonAttached;
-    private bool m_ballAttached;
+
 
 	void Start () 
     {   
@@ -18,34 +27,52 @@ public class Paddle : MonoBehaviour {
         GameObject gc_obj = GameObject.FindWithTag("GameController");
         m_gameController = gc_obj.GetComponent<GameController> ();
 		m_cannonAttached = false;
-        m_ballAttached = true;
+        SetPolyCollider();
 
 	}
-		
-	void FixedUpdate () 
-    {        
-        if (Input.GetMouseButton(0)) 
-        {                                    
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast (ray, out hit)) 
-            {                    
-                m_targetJoint.target = new Vector2 (hit.point.x, hit.point.y);
-            } 
-        }
-        else if(Input.GetMouseButtonUp(0))
+    
+    void SetPolyCollider()
+    {
+        float start_angle = 60.0f;
+        float end_angle = 120.0f;
+        int steps = 8;
+        float pas = (end_angle - start_angle) / steps;
+        float angle;
+        Vector2 []poly = new Vector2[steps+1];
+        for (int i = 0; i < steps+1; i++)
         {
-            if (m_ballAttached == true) 
+            poly[i] = new Vector2();
+            angle = Mathf.PI / 180.0f * (start_angle + i * pas);
+            poly[i].x = 0.5f* Mathf.Cos(angle);
+            poly[i].y = 0.5f * Mathf.Sin(angle)-0.45f;                      
+        }
+        PolygonCollider2D col = GetComponent<PolygonCollider2D>();
+        col.points = poly;
+    }
+
+    public void PaddleMove(Vector2 to)
+    {
+        m_targetJoint.target = to;
+    }
+
+    public void BallRelease()
+    {
+        Debug.Log("Paddle.BallRelease");
+        if (m_ballStatus == BallStatus.BallAttached) 
+        {
+            m_ballStatus = BallStatus.BallReleased;
+            FixedJoint2D joint = GetComponent<FixedJoint2D> ();
+            if (joint != null) 
             {
-                m_ballAttached = false;
-                FixedJoint2D joint = GetComponent<FixedJoint2D> ();
-                if (joint != null) 
-                {
-                    joint.breakForce = 0;
-                    //m_gameController.PaddleReleaseBall ();
-                }
+                joint.breakForce = 0;
             }
         }
+    }
+
+/*
+	void FixedUpdate () 
+    {        
+       
 		if (m_cannonAttached == true) 
 		{
 			m_deltaTime += Time.deltaTime;
@@ -57,7 +84,7 @@ public class Paddle : MonoBehaviour {
 			}
 		}
 	}
-
+*/
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Powerup") 

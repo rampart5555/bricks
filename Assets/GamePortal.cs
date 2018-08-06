@@ -65,14 +65,14 @@ public class GamePortal : MonoBehaviour {
         AnimationClip clip = new AnimationClip();
         clip.name = "game_portal_open";
         clip.legacy = true;
-        go_from = GameObject.Find("game_portal_top").transform.position;
+        go_from = GameObject.Find("game_portal_top").transform.localPosition;
         float[] gpo_top_keys = {
                 0.0f, go_from.x, go_from.y, go_from.z,
                 0.5f, go_from.x, go_from.y, go_from.z,
                 3.0f, go_from.x, go_from.y + dist, go_from.z,
             };
         CreateAnimationCurve(clip,"game_portal_top",gpo_top_keys);
-        go_from = GameObject.Find("game_portal_bottom").transform.position;
+        go_from = GameObject.Find("game_portal_bottom").transform.localPosition;
         float[] gpo_bottom_keys = {
                 0.0f, go_from.x, go_from.y, go_from.z,
                 0.5f, go_from.x, go_from.y, go_from.z,

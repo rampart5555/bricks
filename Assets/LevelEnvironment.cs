@@ -7,6 +7,7 @@ public class LevelEnvironment: MonoBehaviour
 {
     Animation m_animation;
     AnimationClip m_doorLeft;
+    GameController m_gameController;
 
     void Awake()
     {
@@ -16,14 +17,19 @@ public class LevelEnvironment: MonoBehaviour
     }
 
     void Start()
-    {     
-     
-
+    {          
+        GameObject gcObj = GameObject.FindGameObjectWithTag("GameController");
+        m_gameController=gcObj.GetComponent<GameController>();
     }
 
-    void Update()
+    public void DisablePaddleBall()
     {
-        
+        Debug.Log("LevelEnvironment.DisablePaddleBall");
+        Transform mesh_tr;
+        mesh_tr = transform.Find("ball_mesh");
+        mesh_tr.gameObject.SetActive(false);
+        mesh_tr=transform.Find("paddle_mesh_0");
+        mesh_tr.gameObject.SetActive(false);
     }
 
     public void PlayAnimation(string anim_name)
@@ -84,9 +90,11 @@ public class LevelEnvironment: MonoBehaviour
 
     }
 
-    public void AnimationCompleted(string animation)
+    public void AnimationCompleted(string anim_name)
     {
-        Debug.LogFormat("Animation complete:{0}",animation);
+        Debug.LogFormat("LevelEnvironment.AnimationCompleted:{0}",anim_name);
+        m_gameController.AnimationComplete(anim_name);
+
     }
 
     public void AnimationLevelStart()
@@ -159,5 +167,5 @@ public class LevelEnvironment: MonoBehaviour
         anim_dict.Add("ball_mesh", ball_mesh_keys);
 
         AddAnimationClip(paddle_restore, 2.45f, anim_dict);
-    }        
+    } 
 }
