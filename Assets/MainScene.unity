@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 114758611}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62cecae84b8668e4c84951c60cc87859, type: 3}
+  m_Script: {fileID: 11500000, guid: 97e7ffc00f87ec64d958d66547b531a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!111 &114758613
@@ -439,7 +439,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 527463254}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cdf868ef07e7be41903388ca904d483, type: 3}
+  m_Script: {fileID: 11500000, guid: 97704e332619ad7449dc246b3407dd4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &662483879
@@ -455,7 +455,6 @@ GameObject:
   - component: {fileID: 662483882}
   - component: {fileID: 662483881}
   - component: {fileID: 662483885}
-  - component: {fileID: 662483887}
   - component: {fileID: 662483886}
   m_Layer: 0
   m_Name: paddle
@@ -534,12 +533,12 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 662483879}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
   m_Materials:
   - {fileID: 2100000, guid: 1ae3cc494b5cb4c7690bbebacd6f3128, type: 3}
   m_StaticBatchInfo:
@@ -595,27 +594,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 662483879}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80cdd23c277c04fe08ec3bff8bdf6fd8, type: 3}
+  m_Script: {fileID: 11500000, guid: cb842d47e6dc0b44d9d7b86dd09c965f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ballStatus: 0
---- !u!255 &662483887
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 662483879}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: -1.6561188}
-  m_DampingRatio: 0
-  m_Frequency: 0
 --- !u!1 &683651725 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100022, guid: 1ae3cc494b5cb4c7690bbebacd6f3128, type: 3}
@@ -628,7 +609,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 683651725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae5b1db7691c4483880879ea3f75ed82, type: 3}
+  m_Script: {fileID: 11500000, guid: 181b4d0a61813eb42a3db92cafd55d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!111 &683651727
@@ -658,6 +639,7 @@ GameObject:
   - component: {fileID: 779239800}
   - component: {fileID: 779239799}
   - component: {fileID: 779239803}
+  - component: {fileID: 779239804}
   m_Layer: 0
   m_Name: ball
   m_TagString: Ball
@@ -764,12 +746,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 779239797}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66d0a2010879f481e96b7b43dc43bcde, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d385873d1a385b46abd6bf6b56e77be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_status: 0
   m_direction: {x: 0, y: 0}
   m_speed: 2
   m_brickHit: {fileID: 0}
+--- !u!255 &779239804
+FixedJoint2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 779239797}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 662483882}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 1
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0.10022354}
+  m_DampingRatio: 0
+  m_Frequency: 0
 --- !u!1 &987945701
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,7 +1078,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1487222597}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5edbaa038a6746d892cdc165e6e19da, type: 3}
+  m_Script: {fileID: 11500000, guid: b69f161f5615a7d49838ce90ef7189c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_gameComplete: {fileID: 0}

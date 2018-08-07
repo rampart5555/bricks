@@ -5,30 +5,59 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour {
 
+    // Use this for initialization
+    public enum BallStatus {
+        BallAttached=0,
+        BallReleased,
+        BallRunning
+    };
+
+    public  BallStatus m_status;
     public Vector2 m_direction;
     public float m_speed;
 	public AudioClip m_brickHit;
+
     private GameController m_gameController;
     private bool m_directionChanged;
-    private float m_reflectionAngle;
     private ContactPoint2D[] m_contacts;
 
     void Awake()
     {
         GameObject gc_obj = GameObject.FindWithTag("GameController");
         m_gameController = gc_obj.GetComponent<GameController> ();
-
         m_directionChanged = false;
         m_contacts = new ContactPoint2D[5];
-        SetSpeed(1.0f, 1.0f);
         m_direction = new Vector2();
+        m_status = BallStatus.BallAttached;
     }
 
 	void Start () 
     {    
         
 	}
-		
+
+    public void BallRelease()
+    {
+        if (m_status == BallStatus.BallAttached)
+        {
+            Debug.LogFormat("Ball.BallRelease {0}", m_status);
+            FixedJoint2D joint = GetComponent<FixedJoint2D>();
+            if (joint != null)
+            {
+                joint.breakForce = 0;
+            }
+            m_status = BallStatus.BallReleased;
+            Invoke("BallStart", 0.2f);
+        }
+    }
+
+    public void BallStart()
+    {
+        Debug.LogFormat("Ball.BallStart {0}",m_status);
+        SetSpeed(0.0f, 1.0f);
+        m_status = BallStatus.BallRunning;
+    }
+
     public void SetSpeed(float x, float y)
     {       
         m_direction.Set (x, y);
@@ -40,7 +69,7 @@ public class Ball : MonoBehaviour {
     private void SetSpeed()
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D> ();
-        rb.velocity=m_direction*m_speed;
+        rb.velocity = m_direction*m_speed;
     }
 
 	void OnCollisionEnter2D(Collision2D col)

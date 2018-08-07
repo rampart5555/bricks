@@ -24,20 +24,7 @@ public class GameController : MonoBehaviour {
         m_gamePortal.PortalOpen();
 
 	}
-
-    void Update()
-    {
-        if (Input.GetMouseButtonUp(0))
-        {                                    
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {  
-                Debug.Log(hit.transform.name);
-            } 
-        }
-    }
-
+        
     public void AnimationComplete(string anim_name)
     {
         Debug.LogFormat("GameController.AnimationComplete {0}",anim_name);
@@ -48,13 +35,14 @@ public class GameController : MonoBehaviour {
         }
         else if (anim_name == "level_start")
         {
-            m_levelEntities.EnablePaddleBall();
+            m_levelEntities.LevelStart();
             m_levelEnvironment.DisablePaddleBall();
         }            
     }
 
     void FixedUpdate ()
     {
+        
         if (Input.GetMouseButton(0))
         {                                    
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -65,7 +53,8 @@ public class GameController : MonoBehaviour {
             } 
         }
         if (Input.GetMouseButtonUp(0))
-        {
+        {    
+            Debug.Log("Mouse Release");
             m_levelEntities.MouseRelease();
         }
     }

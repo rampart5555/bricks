@@ -6,14 +6,8 @@ using UnityEngine;
 
 public class Paddle : MonoBehaviour {
 
-	// Use this for initialization
-    public enum BallStatus {
-        BallAttached=0,
-        BallReleased,
-        BallRunning
-    };
+	
 
-    public  BallStatus m_ballStatus;
     private TargetJoint2D m_targetJoint;
     private GameController m_gameController;
     private float m_deltaTime;
@@ -54,20 +48,7 @@ public class Paddle : MonoBehaviour {
     {
         m_targetJoint.target = to;
     }
-
-    public void BallRelease()
-    {
-        Debug.Log("Paddle.BallRelease");
-        if (m_ballStatus == BallStatus.BallAttached) 
-        {
-            m_ballStatus = BallStatus.BallReleased;
-            FixedJoint2D joint = GetComponent<FixedJoint2D> ();
-            if (joint != null) 
-            {
-                joint.breakForce = 0;
-            }
-        }
-    }
+        
 
 /*
 	void FixedUpdate () 
