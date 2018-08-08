@@ -37,7 +37,8 @@ public class LevelEnvironment: MonoBehaviour
         //AnimationState m_state = m_animation["level_start"];
         //m_animation.Play("level_complete");         
         //m_animation.Play("level_start");         
-        m_animation.Play(anim_name);         
+        m_animation.Play(anim_name);  
+        m_gameController.AnimationStart(anim_name);
     }
 
     public void CreateAnimationCurve(AnimationClip clip, string obj_name, float[] cp_list)
@@ -86,7 +87,7 @@ public class LevelEnvironment: MonoBehaviour
                 5.0f, go_from.x, go_from.y+0.5f, go_from.z,
             };
         anim_dict.Add("door_right", door_right_keys);
-        AddAnimationClip("level_complete", 4.95f, anim_dict);
+        AddAnimationClip("level_clear", 4.95f, anim_dict);
 
     }
 

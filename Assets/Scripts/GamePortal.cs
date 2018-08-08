@@ -21,7 +21,21 @@ public class GamePortal : MonoBehaviour {
         m_gameController=gcObj.GetComponent<GameController>();
 
 	}
-
+    public void PlayAnimation(string anim_name)
+    {
+        if (anim_name == "game_portal_open")
+        {
+            if (m_animation != null)
+            {
+                AnimationState state = m_animation["game_portal_open"];
+                state.time = 0;
+                state.speed = 1;
+                m_animation.Play("game_portal_open");
+            }
+        }
+        m_gameController.AnimationStart(anim_name);
+    }
+    /*
     public void PortalOpen()
     {     
         if (m_animation != null)
@@ -40,7 +54,7 @@ public class GamePortal : MonoBehaviour {
         state.speed = -1;
         m_animation.Play("game_portal_open");
     }
-
+    */
     void CreateAnimationCurve(AnimationClip clip, string obj_name, float[] cp_list)
     {                                
         string[] axis_pos_str = { "localPosition.x", "localPosition.y", "localPosition.z" };

@@ -17,14 +17,14 @@ public class Ball : MonoBehaviour {
     public float m_speed;
 	public AudioClip m_brickHit;
 
-    private GameController m_gameController;
+    private LevelEntities m_levelEntities;
     private bool m_directionChanged;
     private ContactPoint2D[] m_contacts;
 
     void Awake()
     {
-        GameObject gc_obj = GameObject.FindWithTag("GameController");
-        m_gameController = gc_obj.GetComponent<GameController> ();
+        GameObject gc_obj = GameObject.FindWithTag("LevelEntities");
+        m_levelEntities = gc_obj.GetComponent<LevelEntities>();
         m_directionChanged = false;
         m_contacts = new ContactPoint2D[5];
         m_direction = new Vector2();
@@ -77,9 +77,9 @@ public class Ball : MonoBehaviour {
 		//Debug.Log (col.gameObject.name);
 		//AudioSource.PlayClipAtPoint (m_brickHit, transform.position);
         if (col.gameObject.tag == "Brick") 
-		{                       
-            //m_gameController.RemoveBrick (col.gameObject);
+		{                                   
             col.gameObject.SetActive(false);
+            m_levelEntities.RemoveBrick(col.gameObject);
         } 
 		else if (col.gameObject.tag == "Paddle") 
         {               

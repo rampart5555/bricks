@@ -15,16 +15,28 @@ public class GameController : MonoBehaviour {
     LevelEnvironment m_levelEnvironment;
     LevelEntities  m_levelEntities;
 
+    bool m_levelClear;
+
 	void Start () 
     {
         Debug.Log("GameController.Start");
         m_gamePortal = m_gamePortalGO.GetComponent<GamePortal>();
         m_levelEnvironment = m_levelEnvironmentGO.GetComponent<LevelEnvironment>();
         m_levelEntities = m_levelEntitiesGO.GetComponent<LevelEntities>();
-        m_gamePortal.PortalOpen();
+        m_gamePortal.PlayAnimation("game_portal_open");
 
 	}
-        
+
+    public void AnimationStart(string anim_name)
+    {
+        Debug.LogFormat("GameController.AnimationStart {0}",anim_name);
+        if (anim_name == "game_portal_open")
+        {
+            m_levelClear = false;
+            m_levelEntities.LevelLoad("level_01");
+        }
+    }
+
     public void AnimationComplete(string anim_name)
     {
         Debug.LogFormat("GameController.AnimationComplete {0}",anim_name);
@@ -34,10 +46,19 @@ public class GameController : MonoBehaviour {
             m_levelEnvironment.PlayAnimation("level_start");
         }
         else if (anim_name == "level_start")
-        {
-            m_levelEntities.LevelStart();
+        {            
             m_levelEnvironment.DisablePaddleBall();
-        }            
+            m_levelEntities.LevelStart();
+        }
+        else if (anim_name == "level_clear")
+        {
+            m_levelClear = true;
+        }
+    }
+
+    public void LevelClear()
+    {
+        m_levelEnvironment.PlayAnimation("level_clear");
     }
 
     void FixedUpdate ()
