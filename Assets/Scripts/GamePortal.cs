@@ -7,6 +7,8 @@ public class GamePortal : MonoBehaviour {
 
     Animation m_animation;
     GameController m_gameController;
+    GameController.GCState m_state;
+
     void Awake()
     {
         Debug.Log("GamePortal.Awake");
@@ -21,40 +23,28 @@ public class GamePortal : MonoBehaviour {
         m_gameController=gcObj.GetComponent<GameController>();
 
 	}
-    public void PlayAnimation(string anim_name)
+    public void PlayAnimation(string anim_name,GameController.GCState state)
     {
         if (anim_name == "game_portal_open")
         {
             if (m_animation != null)
             {
-                AnimationState state = m_animation["game_portal_open"];
-                state.time = 0;
-                state.speed = 1;
+                AnimationState anim_state = m_animation["game_portal_open"];
+                anim_state.time = 0;
+                anim_state.speed = 1;
                 m_animation.Play("game_portal_open");
             }
-        }
-        m_gameController.AnimationStart(anim_name);
-    }
-    /*
-    public void PortalOpen()
-    {     
-        if (m_animation != null)
-        {
-            AnimationState state = m_animation["game_portal_open"];
-            state.time = 0;
-            state.speed = 1;
-            m_animation.Play("game_portal_open");
+            m_state = state;
         }
     }
 
-    public void PortalClose()
+    public void AnimationComplete(string animation)
     {
-        AnimationState state= m_animation["game_portal_open"];
-        state.time = state.length;
-        state.speed = -1;
-        m_animation.Play("game_portal_open");
+        Debug.LogFormat("GamePortal.AnimationComplete {0}",animation);
+        m_gameController.OnStateExit(m_state);
+        m_state = GameController.GCState.NONE;
     }
-    */
+
     void CreateAnimationCurve(AnimationClip clip, string obj_name, float[] cp_list)
     {                                
         string[] axis_pos_str = { "localPosition.x", "localPosition.y", "localPosition.z" };
@@ -105,9 +95,5 @@ public class GamePortal : MonoBehaviour {
         m_animation.AddClip(clip,clip.name);
     }
 
-    public void AnimationComplete(string animation)
-    {
-        Debug.LogFormat("GamePortal.AnimationComplete {0}",animation);
-        m_gameController.AnimationComplete(animation);
-    }
+
 }

@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour {
 
     public enum GCState{
+        NONE,
+        GAME_PORTAL_OPEN,
+        LEVEL_START,
+        LEVEL_CLEAR,
         PADDLE_LOST,
         PADDLE_RESTORE
     };
@@ -32,9 +36,73 @@ public class GameController : MonoBehaviour {
         m_gamePortal = m_gamePortalGO.GetComponent<GamePortal>();
         m_levelEnvironment = m_levelEnvironmentGO.GetComponent<LevelEnvironment>();
         m_levelEntities = m_levelEntitiesGO.GetComponent<LevelEntities>();
-        m_gamePortal.PlayAnimation("game_portal_open");
+        OnStateEnter(GCState.GAME_PORTAL_OPEN);
 
 	}
+
+    public void OnStateEnter(GCState state)
+    {
+        switch (state)
+        {
+            case GCState.GAME_PORTAL_OPEN:
+                {
+                    m_gamePortal.PlayAnimation("game_portal_open", state);
+                    m_levelClear = false;
+                    m_levelEntities.LevelLoad("level_01");
+                }
+                break;
+            case GCState.LEVEL_START:
+                {
+                    
+                }
+                break;
+            case GCState.PADDLE_RESTORE:
+                {
+                    if (m_paddleSpare == 0)
+                    {
+                        Debug.Log("GAME OVER");
+                    }
+                    else
+                    {
+                        m_levelEntities.PaddleLost();
+                        m_levelEnvironment.PlayAnimation(string.Format("paddle_restore_{0}", 
+                            m_paddleSpare),GCState.PADDLE_RESTORE);
+                        m_paddleSpare--;
+                    }
+                }
+                break;
+
+            default:
+                break;    
+        }
+    }
+
+    public void OnStateExit(GCState state)
+    {
+        switch (state)
+        {
+            case GCState.GAME_PORTAL_OPEN:
+                {
+                    m_levelEnvironment.PlayAnimation("level_start", GCState.LEVEL_START);
+                 
+                }
+                break;
+            case GCState.LEVEL_START:
+                {
+                    m_levelEnvironment.DisableEntities();
+                    m_levelEntities.LevelStart();
+                }
+                break;
+            case GCState.PADDLE_RESTORE:
+                {
+                    m_levelEnvironment.DisableEntities();
+                    m_levelEntities.LevelStart();
+                }
+                break;
+            default:
+                break;    
+        }
+    }
 
     public void AnimationStart(string anim_name)
     {
@@ -52,7 +120,7 @@ public class GameController : MonoBehaviour {
        
         if (anim_name == "game_portal_open")
         {
-            m_levelEnvironment.PlayAnimation("level_start");
+            m_levelEnvironment.PlayAnimation("level_start",GCState.LEVEL_START);
         }
         else if (anim_name == "level_start")
         {            
@@ -67,38 +135,9 @@ public class GameController : MonoBehaviour {
 
     public void LevelClear()
     {
-        m_levelEnvironment.PlayAnimation("level_clear");
+        m_levelEnvironment.PlayAnimation("level_clear",GCState.LEVEL_CLEAR);
     }
-
-    public void SetState(GCState state)
-    {
-        switch(state)
-        {
-            case GCState.PADDLE_LOST:
-                {        
-                    if (m_paddleSpare == 0)
-                    {
-                        Debug.Log("GAME OVER");
-                    }
-                    else
-                    {
-                        m_levelEntities.PaddleLost();
-                        m_levelEnvironment.PlayAnimation(string.Format("paddle_restore_{0}", m_paddleSpare));
-                        m_paddleSpare--;
-                    }
-                    break;
-                }
-            case GCState.PADDLE_RESTORE:
-                {
-                    m_levelEnvironment.DisableEntities();
-                    m_levelEntities.LevelStart();
-                    break;
-                }
-            default:
-                break;
-        }
-    }
-
+   
     void FixedUpdate ()
     {
         

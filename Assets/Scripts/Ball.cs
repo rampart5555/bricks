@@ -95,7 +95,7 @@ public class Ball : MonoBehaviour {
         }
         else if (col.gameObject.name == "wall_bottom")
         {
-            m_gameController.SetState(GameController.GCState.PADDLE_LOST);
+            m_levelEntities.RemoveBall(gameObject);
         }
 	}
 

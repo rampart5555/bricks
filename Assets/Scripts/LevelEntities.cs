@@ -13,6 +13,7 @@ public class LevelEntities : MonoBehaviour
     Brick m_brick;
     GameController m_gameController;
     int m_brickNumber;
+    int m_ballNumber;
 
     void Start()
     {
@@ -22,6 +23,8 @@ public class LevelEntities : MonoBehaviour
         m_paddle.gameObject.SetActive(false);
         m_ball.gameObject.SetActive(false);
         m_brickGO = transform.Find("brick").gameObject;
+
+        m_ballNumber = 1;
 
     }
         
@@ -105,14 +108,24 @@ public class LevelEntities : MonoBehaviour
 
     public void RemoveBrick(GameObject brick)
     {
-        m_brickNumber--;
         Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
+        m_brickNumber--;
+
         if (m_brickNumber <= 0)
         {
             m_gameController.LevelClear();
         }
     }
+    public void RemoveBall(GameObject ball)
+    {
+        Debug.LogFormat("LevelEntities.RemoveBall {0}",m_ballNumber);
+        m_ballNumber--;
+        if (m_ballNumber <= 0)
+        {
+            m_gameController.OnStateEnter(GameController.GCState.PADDLE_RESTORE);
+        }
 
+    }
     public void PaddleLost()
     {
         m_paddle.gameObject.SetActive(false);
