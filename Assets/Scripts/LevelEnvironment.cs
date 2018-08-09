@@ -9,11 +9,25 @@ public class LevelEnvironment: MonoBehaviour
     AnimationClip m_doorLeft;
     GameController m_gameController;
 
+    GameObject m_ballMesh;
+    GameObject m_paddleMesh;
+    GameObject [] m_paddleMeshSlots;
     void Awake()
     {
         AnimationLevelStart();
+        AnimatioPaddleLost(1);
+        AnimatioPaddleLost(2);
         AnimatioPaddleLost(3);
+
+
         AnimationLevelComplete();
+        m_ballMesh = transform.Find("ball_mesh").gameObject;
+        m_paddleMesh = transform.Find("paddle_mesh_0").gameObject;
+        m_paddleMeshSlots = new GameObject[3];
+        for (int i = 0; i < 3; i++)
+        {
+            m_paddleMeshSlots[i] = transform.Find(string.Format("paddle_mesh_{0}", i + 1)).gameObject;
+        }
     }
 
     void Start()
@@ -22,21 +36,21 @@ public class LevelEnvironment: MonoBehaviour
         m_gameController=gcObj.GetComponent<GameController>();
     }
 
-    public void DisablePaddleBall()
+    public void DisableEntities()
     {
         Debug.Log("LevelEnvironment.DisablePaddleBall");
-        Transform mesh_tr;
-        mesh_tr = transform.Find("ball_mesh");
-        mesh_tr.gameObject.SetActive(false);
-        mesh_tr=transform.Find("paddle_mesh_0");
-        mesh_tr.gameObject.SetActive(false);
+        m_ballMesh.SetActive(false);
+        m_paddleMesh.SetActive(false);
+    }
+
+    public void EnableEntities()
+    {
+        m_ballMesh.SetActive(true);
     }
 
     public void PlayAnimation(string anim_name)
-    {       
-        //AnimationState m_state = m_animation["level_start"];
-        //m_animation.Play("level_complete");         
-        //m_animation.Play("level_start");         
+    {               
+        EnableEntities();
         m_animation.Play(anim_name);  
         m_gameController.AnimationStart(anim_name);
     }
@@ -95,7 +109,21 @@ public class LevelEnvironment: MonoBehaviour
     {
         Debug.LogFormat("LevelEnvironment.AnimationCompleted:{0}",anim_name);
         m_gameController.AnimationComplete(anim_name);
-
+        if (anim_name == "paddle_restore_3")
+        {
+            m_paddleMeshSlots[2].SetActive(false);
+            m_gameController.SetState(GameController.GCState.PADDLE_RESTORE);
+        }
+        if (anim_name == "paddle_restore_2")
+        {
+            m_paddleMeshSlots[1].SetActive(false);
+            m_gameController.SetState(GameController.GCState.PADDLE_RESTORE);
+        }
+        if (anim_name == "paddle_restore_1")
+        {
+            m_paddleMeshSlots[0].SetActive(false);
+            m_gameController.SetState(GameController.GCState.PADDLE_RESTORE);
+        }
     }
 
     public void AnimationLevelStart()

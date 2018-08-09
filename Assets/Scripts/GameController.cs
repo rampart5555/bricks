@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
-    public Button m_gameComplete;
-    public Button m_paddleLost;
+    public enum GCState{
+        PADDLE_LOST,
+        PADDLE_RESTORE
+    };
+        
     public GameObject m_levelEnvironmentGO;
     public GameObject m_levelEntitiesGO;
     public GameObject m_gamePortalGO;
@@ -16,6 +19,12 @@ public class GameController : MonoBehaviour {
     LevelEntities  m_levelEntities;
 
     bool m_levelClear;
+    int m_paddleSpare;
+
+    void Awake()
+    {
+        m_paddleSpare = 3;
+    }
 
 	void Start () 
     {
@@ -47,18 +56,47 @@ public class GameController : MonoBehaviour {
         }
         else if (anim_name == "level_start")
         {            
-            m_levelEnvironment.DisablePaddleBall();
+            m_levelEnvironment.DisableEntities();
             m_levelEntities.LevelStart();
         }
         else if (anim_name == "level_clear")
         {
-            m_levelClear = true;
+            m_levelClear = true; 
         }
     }
 
     public void LevelClear()
     {
         m_levelEnvironment.PlayAnimation("level_clear");
+    }
+
+    public void SetState(GCState state)
+    {
+        switch(state)
+        {
+            case GCState.PADDLE_LOST:
+                {        
+                    if (m_paddleSpare == 0)
+                    {
+                        Debug.Log("GAME OVER");
+                    }
+                    else
+                    {
+                        m_levelEntities.PaddleLost();
+                        m_levelEnvironment.PlayAnimation(string.Format("paddle_restore_{0}", m_paddleSpare));
+                        m_paddleSpare--;
+                    }
+                    break;
+                }
+            case GCState.PADDLE_RESTORE:
+                {
+                    m_levelEnvironment.DisableEntities();
+                    m_levelEntities.LevelStart();
+                    break;
+                }
+            default:
+                break;
+        }
     }
 
     void FixedUpdate ()

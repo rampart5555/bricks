@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class LevelEntities : MonoBehaviour 
 {   
+    public GameObject m_paddleStartPos;
+    public GameObject m_ballStartPos;
+
     GameObject m_brickGO;
     Paddle m_paddle;
     Ball m_ball;
@@ -39,10 +42,14 @@ public class LevelEntities : MonoBehaviour
     public void LevelStart()
     {
         Debug.Log("LevelEntities.LevelStart");
-        Debug.Log("LevelEntities.EnableEntities");
         m_paddle.gameObject.SetActive(true);
         m_ball.gameObject.SetActive(true);
-
+        Vector3 startPos = m_paddleStartPos.transform.localPosition;
+        m_paddle.gameObject.transform.position = new Vector3(startPos.x, startPos.y, startPos.z);
+        startPos = m_ballStartPos.transform.localPosition;
+        m_ball.gameObject.transform.position = new Vector3(startPos.x, startPos.y, startPos.z);
+        //m_ball.gameObject.transform.Translate(Vector3.zero);
+        //m_ball.gameObject.transform.Translate(m_ballStartPos.transform.localPosition);
     }
 
     void LevelReset()
@@ -104,5 +111,11 @@ public class LevelEntities : MonoBehaviour
         {
             m_gameController.LevelClear();
         }
+    }
+
+    public void PaddleLost()
+    {
+        m_paddle.gameObject.SetActive(false);
+        m_ball.gameObject.SetActive(false);
     }
 }

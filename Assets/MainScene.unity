@@ -443,6 +443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97704e332619ad7449dc246b3407dd4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_paddleStartPos: {fileID: 1133830645}
+  m_ballStartPos: {fileID: 1850438321}
 --- !u!1 &662483879
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,6 +976,10 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 50ebfc6b55cff2b448965a0b9b4dd5cb, type: 3}
   m_IsPrefabParent: 0
+--- !u!1 &1133830645 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100020, guid: 1ae3cc494b5cb4c7690bbebacd6f3128, type: 3}
+  m_PrefabInternal: {fileID: 1060966157}
 --- !u!1 &1259438082
 GameObject:
   m_ObjectHideFlags: 0
@@ -1082,8 +1088,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69f161f5615a7d49838ce90ef7189c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_gameComplete: {fileID: 0}
-  m_paddleLost: {fileID: 0}
   m_levelEnvironmentGO: {fileID: 683651725}
   m_levelEntitiesGO: {fileID: 527463254}
   m_gamePortalGO: {fileID: 114758611}
@@ -1230,6 +1234,10 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1 &1850438321 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100004, guid: 1ae3cc494b5cb4c7690bbebacd6f3128, type: 3}
+  m_PrefabInternal: {fileID: 1060966157}
 --- !u!1 &1963701307
 GameObject:
   m_ObjectHideFlags: 0

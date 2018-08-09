@@ -18,6 +18,7 @@ public class Ball : MonoBehaviour {
 	public AudioClip m_brickHit;
 
     private LevelEntities m_levelEntities;
+    private GameController m_gameController;
     private bool m_directionChanged;
     private ContactPoint2D[] m_contacts;
 
@@ -25,6 +26,7 @@ public class Ball : MonoBehaviour {
     {
         GameObject gc_obj = GameObject.FindWithTag("LevelEntities");
         m_levelEntities = gc_obj.GetComponent<LevelEntities>();
+        m_gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
         m_directionChanged = false;
         m_contacts = new ContactPoint2D[5];
         m_direction = new Vector2();
@@ -76,20 +78,24 @@ public class Ball : MonoBehaviour {
 	{
 		//Debug.Log (col.gameObject.name);
 		//AudioSource.PlayClipAtPoint (m_brickHit, transform.position);
-        if (col.gameObject.tag == "Brick") 
-		{                                   
+        if (col.gameObject.tag == "Brick")
+        {                                   
             col.gameObject.SetActive(false);
             m_levelEntities.RemoveBrick(col.gameObject);
-        } 
-		else if (col.gameObject.tag == "Paddle") 
+        }
+        else if (col.gameObject.tag == "Paddle")
         {               
             GameObject paddle = col.gameObject;
-            Rigidbody2D rb = GetComponent<Rigidbody2D> ();
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
-            rb.GetContacts (m_contacts);
+            rb.GetContacts(m_contacts);
             m_direction.Set(m_contacts[0].normal.x, m_contacts[0].normal.y);
             m_directionChanged = true;
 
+        }
+        else if (col.gameObject.name == "wall_bottom")
+        {
+            m_gameController.SetState(GameController.GCState.PADDLE_LOST);
         }
 	}
 
