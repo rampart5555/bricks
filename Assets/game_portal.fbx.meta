@@ -9,20 +9,25 @@ ModelImporter:
     100002: game_portal_top
     100004: gmae_portal_bottom
     100006: game_portal_bottom
+    100008: button_continue
     400000: //RootNode
     400002: game_portal_top
     400004: gmae_portal_bottom
     400006: game_portal_bottom
+    400008: button_continue
     2100000: No Name
     2300000: game_portal_top
     2300002: gmae_portal_bottom
     2300004: game_portal_bottom
+    2300006: button_continue
     3300000: game_portal_top
     3300002: gmae_portal_bottom
     3300004: game_portal_bottom
+    3300006: button_continue
     4300000: gmae_portal_bottom
     4300002: game_portal_top
     4300004: game_portal_bottom
+    4300006: button_continue
   externalObjects: {}
   materials:
     importMaterials: 1

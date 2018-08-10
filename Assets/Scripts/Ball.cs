@@ -41,13 +41,7 @@ public class Ball : MonoBehaviour {
     public void BallRelease()
     {
         if (m_status == BallStatus.BallAttached)
-        {
-            Debug.LogFormat("Ball.BallRelease {0}", m_status);
-            FixedJoint2D joint = GetComponent<FixedJoint2D>();
-            if (joint != null)
-            {
-                joint.breakForce = 0;
-            }
+        {            
             m_status = BallStatus.BallReleased;
             Invoke("BallStart", 0.2f);
         }
@@ -55,7 +49,7 @@ public class Ball : MonoBehaviour {
 
     public void BallStart()
     {
-        Debug.LogFormat("Ball.BallStart {0}",m_status);
+        Debug.LogFormat("Ball.BallStart");
         SetSpeed(0.0f, 1.0f);
         m_status = BallStatus.BallRunning;
     }

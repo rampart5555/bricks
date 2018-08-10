@@ -52,8 +52,7 @@ public class LevelEnvironment: MonoBehaviour
     }
 
     public void PlayAnimation(string anim_name,GameController.GCState state)
-    {               
-        EnableEntities();
+    {            
         m_animation.Play(anim_name);  
         m_state = state;
     }

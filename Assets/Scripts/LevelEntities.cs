@@ -33,7 +33,8 @@ public class LevelEntities : MonoBehaviour
         if (m_ball.m_status == Ball.BallStatus.BallAttached)
         {
             Debug.LogFormat("LevelEntities.MouseRelease {0}", m_ball.m_status);
-            m_ball.BallRelease();
+            m_paddle.BallRelease();
+            m_ball.BallStart();
         }
     }
 
@@ -41,18 +42,25 @@ public class LevelEntities : MonoBehaviour
     {        
         m_paddle.PaddleMove(pos);
     }
-
+    public void LevelClear()
+    {
+        m_ball.SetSpeed(0.0f, 0.0f);
+    }
     public void LevelStart()
     {
         Debug.Log("LevelEntities.LevelStart");
         m_paddle.gameObject.SetActive(true);
         m_ball.gameObject.SetActive(true);
+        Rigidbody2D brb = m_ball.gameObject.GetComponent<Rigidbody2D>();
+        m_paddle.BallAttach(brb);
+        m_ball.m_status = Ball.BallStatus.BallAttached;
         Vector3 startPos = m_paddleStartPos.transform.localPosition;
         m_paddle.gameObject.transform.position = new Vector3(startPos.x, startPos.y, startPos.z);
         startPos = m_ballStartPos.transform.localPosition;
         m_ball.gameObject.transform.position = new Vector3(startPos.x, startPos.y, startPos.z);
         //m_ball.gameObject.transform.Translate(Vector3.zero);
         //m_ball.gameObject.transform.Translate(m_ballStartPos.transform.localPosition);
+
     }
 
     void LevelReset()
@@ -63,6 +71,7 @@ public class LevelEntities : MonoBehaviour
     public void LevelLoad(string level)
     {
         LevelReset();
+        m_brickGO.SetActive(true);
         TextAsset m_textAsset = Resources.Load("Levels/"+level) as TextAsset;     
         if (m_textAsset == null) {            
             Debug.LogErrorFormat("File not found {0}",level);
@@ -113,7 +122,7 @@ public class LevelEntities : MonoBehaviour
 
         if (m_brickNumber <= 0)
         {
-            m_gameController.LevelClear();
+            m_gameController.OnStateEnter(GameController.GCState.LEVEL_CLEAR);
         }
     }
     public void RemoveBall(GameObject ball)

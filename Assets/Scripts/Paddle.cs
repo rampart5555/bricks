@@ -46,9 +46,22 @@ public class Paddle : MonoBehaviour {
 
     public void PaddleMove(Vector2 to)
     {
-        m_targetJoint.target = to;
+        if(m_targetJoint!=null)
+            m_targetJoint.target = to;
     }
-        
+
+    public void BallRelease()
+    {
+        FixedJoint2D pfj = GetComponent<FixedJoint2D>();
+        pfj.enabled = false;
+    }
+
+    public void BallAttach(Rigidbody2D ball)
+    {        
+        FixedJoint2D pfj = GetComponent<FixedJoint2D>();
+        pfj.enabled = true;
+        pfj.connectedBody = ball;
+    }
 
 /*
 	void FixedUpdate () 
@@ -68,7 +81,7 @@ public class Paddle : MonoBehaviour {
 */
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Powerup") 
+        if (col.gameObject.tag == "Powerup")
         {    
             /*
 			Powerup pup_obj = col.gameObject.GetComponent<Powerup> ();
@@ -79,6 +92,13 @@ public class Paddle : MonoBehaviour {
             //m_gameController.RemovePowerup (col.gameObject);
             col.gameObject.SetActive(false);
             */
+        }
+        else if (col.gameObject.name == "wall_right")
+        {
+            if (m_gameController.m_levelClear == true)
+            {
+                m_gameController.OnStateEnter(GameController.GCState.LEVEL_COMPLETED);
+            }
         }
     }
 }

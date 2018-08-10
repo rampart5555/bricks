@@ -12,7 +12,8 @@ public class GamePortal : MonoBehaviour {
     void Awake()
     {
         Debug.Log("GamePortal.Awake");
-        CreateAnimations();
+        CreateAnimationGamePortalOpen();
+        CreateAnimationGamePortalClose();
 
     }
 	// Use this for initialization
@@ -25,17 +26,8 @@ public class GamePortal : MonoBehaviour {
 	}
     public void PlayAnimation(string anim_name,GameController.GCState state)
     {
-        if (anim_name == "game_portal_open")
-        {
-            if (m_animation != null)
-            {
-                AnimationState anim_state = m_animation["game_portal_open"];
-                anim_state.time = 0;
-                anim_state.speed = 1;
-                m_animation.Play("game_portal_open");
-            }
-            m_state = state;
-        }
+        m_state = state;
+        m_animation.Play(anim_name);
     }
 
     public void AnimationComplete(string animation)
@@ -61,7 +53,7 @@ public class GamePortal : MonoBehaviour {
         }       
     }
 
-    void CreateAnimations()
+    void CreateAnimationGamePortalOpen()
     {   
         Vector3 go_from;
 
@@ -94,6 +86,38 @@ public class GamePortal : MonoBehaviour {
         m_animation = GetComponent<Animation>();
         m_animation.AddClip(clip,clip.name);
     }
+    void CreateAnimationGamePortalClose()
+    {   
+        Vector3 go_from;
 
+        float dist=4.0f;
+        AnimationClip clip = new AnimationClip();
+        clip.name = "game_portal_close";
+        clip.legacy = true;
+        go_from = GameObject.Find("game_portal_top").transform.localPosition;
+        float[] gpo_top_keys = {
+            0.0f, go_from.x, go_from.y+dist, go_from.z,
+            0.5f, go_from.x, go_from.y+dist, go_from.z,
+            3.0f, go_from.x, go_from.y, go_from.z,
+        };
+        CreateAnimationCurve(clip,"game_portal_top",gpo_top_keys);
+        go_from = GameObject.Find("game_portal_bottom").transform.localPosition;
+        float[] gpo_bottom_keys = {
+            0.0f, go_from.x, go_from.y-dist, go_from.z,
+            0.5f, go_from.x, go_from.y-dist, go_from.z,
+            3.0f, go_from.x, go_from.y, go_from.z,
+        };
+        CreateAnimationCurve(clip,"game_portal_bottom",gpo_bottom_keys);
+
+        AnimationEvent evt;
+        evt = new AnimationEvent();
+        evt.time = clip.length-0.1f;
+        evt.functionName = "AnimationComplete";
+        evt.stringParameter = clip.name;
+        clip.AddEvent(evt);
+
+        m_animation = GetComponent<Animation>();
+        m_animation.AddClip(clip,clip.name);
+    }
 
 }
