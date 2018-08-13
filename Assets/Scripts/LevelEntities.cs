@@ -42,6 +42,17 @@ public class LevelEntities : MonoBehaviour
     {        
         m_paddle.PaddleMove(pos);
     }
+
+    public void EnableEntities(string[] entities)
+    {
+        Transform tr;
+        foreach (string ent_str in entities)
+        {
+            tr=transform.Find(ent_str);
+            tr.gameObject.SetActive(true);
+        }
+    }
+
     public void LevelClear()
     {
         m_ball.SetSpeed(0.0f, 0.0f);
@@ -120,9 +131,9 @@ public class LevelEntities : MonoBehaviour
         Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
         m_brickNumber--;
 
-        if (m_brickNumber <= 0)
+        if (m_brickNumber <= 5)
         {
-            m_gameController.OnStateEnter(GameController.GCState.LEVEL_CLEAR);
+            m_gameController.LevelCleared();
         }
     }
     public void RemoveBall(GameObject ball)
@@ -131,7 +142,7 @@ public class LevelEntities : MonoBehaviour
         m_ballNumber--;
         if (m_ballNumber <= 0)
         {
-            m_gameController.OnStateEnter(GameController.GCState.PADDLE_RESTORE);
+            m_gameController.OnStateEnter(GameController.GCState.NONE);
         }
 
     }

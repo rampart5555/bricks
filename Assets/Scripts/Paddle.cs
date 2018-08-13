@@ -95,9 +95,9 @@ public class Paddle : MonoBehaviour {
         }
         else if (col.gameObject.name == "wall_right")
         {
-            if (m_gameController.m_levelClear == true)
+            if (m_gameController.m_doorRightIsOpen == true)
             {
-                m_gameController.OnStateEnter(GameController.GCState.LEVEL_COMPLETED);
+                m_gameController.LevelComplete();
             }
         }
     }

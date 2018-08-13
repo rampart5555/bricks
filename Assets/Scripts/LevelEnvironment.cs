@@ -5,9 +5,11 @@ using UnityEditor;
 
 public class LevelEnvironment: MonoBehaviour
 {
+    GameObject m_gameControllerGO;
+    GameController m_gameController;
     Animation m_animation;
     AnimationClip m_doorLeft;
-    GameController m_gameController;
+
 
     GameObject m_ballMesh;
     GameObject m_paddleMesh;
@@ -17,13 +19,7 @@ public class LevelEnvironment: MonoBehaviour
 
     void Awake()
     {
-        //AnimationLevelStart();
-        //AnimatioPaddleLost(1);
-        //AnimatioPaddleLost(2);
-        //AnimatioPaddleLost(3);
-
-
-        //AnimationLevelComplete();
+        
         m_ballMesh = transform.Find("ball_mesh").gameObject;
         m_paddleMesh = transform.Find("paddle_mesh_0").gameObject;
         m_paddleMeshSlots = new GameObject[3];
@@ -34,25 +30,43 @@ public class LevelEnvironment: MonoBehaviour
     }
 
     void Start()
-    {          
-        GameObject gcObj = GameObject.FindGameObjectWithTag("GameController");
-        m_gameController=gcObj.GetComponent<GameController>();
+    {     
+        GameObject m_gameControllerGO = GameObject.FindGameObjectWithTag("GameController");
+        m_gameController=m_gameControllerGO.GetComponent<GameController>();
     }
 
-    public void DisableGamePortal()
+    public void DoorRightOpenComplete()
+    {
+        m_gameController.DoorRightOpenComplete();
+    }
+
+    public void SetGamePortalPosOpen()
+    {
+        Transform tr;  
+        tr = transform.Find("game_portal_top");
+        tr.localPosition = new Vector3(tr.localPosition.x, 2.6f, tr.localPosition.z);
+        tr = transform.Find("game_portal_bottom");
+        tr.localPosition = new Vector3(tr.position.x, -2.6f, tr.localPosition.z);
+    }
+
+    public void DisableEntities(string [] entities)
     {
         Transform tr;
-        tr= transform.Find("game_portal_bottom");
-        tr.gameObject.SetActive(false);
-        tr= transform.Find("game_portal_top");
-        tr.gameObject.SetActive(false);
-        //for (int i = 0; i < go_list.Length; i++)
-        //    go_list[i].SetActive(false);
+        foreach (string ent_str in entities)
+        {
+            tr=transform.Find(ent_str);
+            tr.gameObject.SetActive(false);
+        }            
     }
         
-    public void EnableEntities()
+    public void EnableEntities(string [] entities)
     {
-        m_ballMesh.SetActive(true);
+        Transform tr;
+        foreach (string ent_str in entities)
+        {
+            tr=transform.Find(ent_str);
+            tr.gameObject.SetActive(true);
+        }            
     }
 
     public void PlayAnimation(string anim_name,GameController.GCState state)

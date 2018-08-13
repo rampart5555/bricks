@@ -7,13 +7,12 @@ public class GameController : MonoBehaviour {
 
     public enum GCState{
         NONE,
-        GAME_PORTAL_OPEN,
-        GAME_PORTAL_CLOSE,
-        LEVEL_START,
-        LEVEL_CLEAR,
-        LEVEL_COMPLETED,
-        PADDLE_LOST,
-        PADDLE_RESTORE
+        LEVEL_ENTRY_STATE_ENTER,
+        LEVEL_ENTRY_STATE_EXIT,
+        LEVEL_START_STATE_ENTER,
+        LEVEL_START_STATE_EXIT,
+        LEVEL_CLEARED_STATE_ENTER,
+        LEVEL_CLEARED_STATE_EXIT,
     };
         
     public GameObject m_levelEnvironmentGO;
@@ -22,7 +21,8 @@ public class GameController : MonoBehaviour {
     LevelEnvironment m_levelEnvironment;
     LevelEntities  m_levelEntities;
 
-    public bool m_levelClear;
+    public bool m_doorRightIsOpen;
+    private bool m_levelComplete;
 
     int m_paddleSpare;
 
@@ -42,16 +42,80 @@ public class GameController : MonoBehaviour {
         m_levelEnvAnimator = m_levelEnvironmentGO.GetComponent<Animator>();
 
 	}
+    public void SetState(GCState state)
+    {
+        switch (state)
+        {
+            case GCState.LEVEL_ENTRY_STATE_ENTER:
+                {
+                    m_doorRightIsOpen = false;
+                    m_levelComplete = false;
+                    m_levelEntities.LevelLoad("level_01");
+                }
+                break;
+            case GCState.LEVEL_ENTRY_STATE_EXIT:
+                {
+                    string[] entities = { "game_portal_top", "game_portal_bottom", "ball_mesh", "paddle_mesh_0" };
+                    m_levelEnvironment.DisableEntities(entities);
+                }
+                break;
+            case GCState.LEVEL_START_STATE_ENTER:
+                {
+                    string[] entities = { "ball", "paddle" };
+                    m_levelEntities.EnableEntities(entities);
+                }
+                break;
+
+            case GCState.LEVEL_CLEARED_STATE_ENTER:                
+                break;
+
+            case GCState.LEVEL_CLEARED_STATE_EXIT:
+                {                    
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void DoorRightOpenComplete()
+    {
+        m_doorRightIsOpen = true;
+    }
+
+    public void LevelCleared()
+    {
+        m_levelEnvAnimator.SetTrigger("level_cleared");
+    }
+
+    public void LevelComplete()
+    {
+        if (m_levelComplete == false)
+        {
+            Debug.LogFormat("*** GameController.LEVEL_COMPLETE ***");
+            m_levelEnvAnimator.SetTrigger("level_complete");
+            m_levelComplete = true;
+            //string[] entities = { "game_portal_top", "game_portal_bottom", "ball_mesh", "paddle_mesh_0" };
+            //m_levelEnvironment.SetGamePortalPosOpen();
+            //m_levelEnvironment.EnableEntities(entities);
+        }
+    }
+
+    public void LevelLoad()
+    {
+        //m_levelEntities.LevelLoad("level_01");
+    }
 
     public void OnStateEnter(GCState state)
     {
         Debug.LogFormat("GameController.OnStateEnter {0}", state);
+        /*
         switch (state)
         {
             case GCState.GAME_PORTAL_OPEN:
                 {                    
                     m_levelClear = false;
-                    m_levelEntities.LevelLoad("level_01");
+
                 }
                 break;
             case GCState.LEVEL_START:
@@ -88,11 +152,13 @@ public class GameController : MonoBehaviour {
             default:
                 break;    
         }
+        */
     }
 
     public void OnStateExit(GCState state)
     {
         Debug.LogFormat("GameController.OnStateExit: {0}", state);
+        /*
         switch (state)
         {
             case GCState.GAME_PORTAL_OPEN:
@@ -123,8 +189,9 @@ public class GameController : MonoBehaviour {
             default:
                 break;    
         }
+        */
     }
-        
+   
     void FixedUpdate ()
     {
 
