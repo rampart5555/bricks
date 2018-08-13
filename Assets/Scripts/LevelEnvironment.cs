@@ -17,13 +17,13 @@ public class LevelEnvironment: MonoBehaviour
 
     void Awake()
     {
-        AnimationLevelStart();
-        AnimatioPaddleLost(1);
-        AnimatioPaddleLost(2);
-        AnimatioPaddleLost(3);
+        //AnimationLevelStart();
+        //AnimatioPaddleLost(1);
+        //AnimatioPaddleLost(2);
+        //AnimatioPaddleLost(3);
 
 
-        AnimationLevelComplete();
+        //AnimationLevelComplete();
         m_ballMesh = transform.Find("ball_mesh").gameObject;
         m_paddleMesh = transform.Find("paddle_mesh_0").gameObject;
         m_paddleMeshSlots = new GameObject[3];
@@ -39,13 +39,17 @@ public class LevelEnvironment: MonoBehaviour
         m_gameController=gcObj.GetComponent<GameController>();
     }
 
-    public void DisableEntities()
+    public void DisableGamePortal()
     {
-        Debug.Log("LevelEnvironment.DisablePaddleBall");
-        m_ballMesh.SetActive(false);
-        m_paddleMesh.SetActive(false);
+        Transform tr;
+        tr= transform.Find("game_portal_bottom");
+        tr.gameObject.SetActive(false);
+        tr= transform.Find("game_portal_top");
+        tr.gameObject.SetActive(false);
+        //for (int i = 0; i < go_list.Length; i++)
+        //    go_list[i].SetActive(false);
     }
-
+        
     public void EnableEntities()
     {
         m_ballMesh.SetActive(true);
