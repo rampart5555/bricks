@@ -51,6 +51,10 @@ public class GameController : MonoBehaviour {
                     m_doorRightIsOpen = false;
                     m_levelComplete = false;
                     m_levelEntities.LevelLoad("level_01");
+                    string[] entities_1= {"ball_mesh", "paddle_mesh_0" };
+                    m_levelEnvironment.EnableEntities(entities_1);
+                    string[] entities_2={"ball", "paddle" };
+                    m_levelEntities.DisableEntities(entities_2);
                 }
                 break;
             case GCState.LEVEL_ENTRY_STATE_EXIT:
@@ -95,9 +99,9 @@ public class GameController : MonoBehaviour {
             Debug.LogFormat("*** GameController.LEVEL_COMPLETE ***");
             m_levelEnvAnimator.SetTrigger("level_complete");
             m_levelComplete = true;
-            //string[] entities = { "game_portal_top", "game_portal_bottom", "ball_mesh", "paddle_mesh_0" };
-            //m_levelEnvironment.SetGamePortalPosOpen();
-            //m_levelEnvironment.EnableEntities(entities);
+            string[] entities = { "game_portal_top", "game_portal_bottom"};
+            m_levelEnvironment.EnableEntities(entities);
+            m_levelEntities.LevelComplete();
         }
     }
 

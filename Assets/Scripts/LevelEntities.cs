@@ -20,8 +20,6 @@ public class LevelEntities : MonoBehaviour
         m_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         m_paddle = transform.Find("paddle").gameObject.GetComponent<Paddle>();
         m_ball = transform.Find("ball").gameObject.GetComponent<Ball>();
-        m_paddle.gameObject.SetActive(false);
-        m_ball.gameObject.SetActive(false);
         m_brickGO = transform.Find("brick").gameObject;
 
         m_ballNumber = 1;
@@ -53,10 +51,28 @@ public class LevelEntities : MonoBehaviour
         }
     }
 
-    public void LevelClear()
+    public void DisableEntities(string[] entities)
+    {
+        Transform tr;
+        foreach (string ent_str in entities)
+        {
+            tr=transform.Find(ent_str);
+            tr.gameObject.SetActive(false);
+            if (tr.gameObject.tag == "Ball")
+            {
+                tr.position = m_ballStartPos.transform.position;
+            }
+            else if (tr.gameObject.tag == "Paddle")
+            {
+                tr.position = m_paddleStartPos.transform.position;
+            }
+        }
+    }
+    public void LevelComplete()
     {
         m_ball.SetSpeed(0.0f, 0.0f);
     }
+
     public void LevelStart()
     {
         Debug.Log("LevelEntities.LevelStart");
@@ -131,7 +147,7 @@ public class LevelEntities : MonoBehaviour
         Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
         m_brickNumber--;
 
-        if (m_brickNumber <= 5)
+        if (m_brickNumber <= 0)
         {
             m_gameController.LevelCleared();
         }
