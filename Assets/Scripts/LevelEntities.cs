@@ -40,37 +40,17 @@ public class LevelEntities : MonoBehaviour
     {        
         m_paddle.PaddleMove(pos);
     }
-
-    public void EnableEntities(string[] entities)
-    {
-        Transform tr;
-        foreach (string ent_str in entities)
-        {
-            tr=transform.Find(ent_str);
-            tr.gameObject.SetActive(true);
-        }
-    }
-
-    public void DisableEntities(string[] entities)
-    {
-        Transform tr;
-        foreach (string ent_str in entities)
-        {
-            tr=transform.Find(ent_str);
-            tr.gameObject.SetActive(false);
-            if (tr.gameObject.tag == "Ball")
-            {
-                tr.position = m_ballStartPos.transform.position;
-            }
-            else if (tr.gameObject.tag == "Paddle")
-            {
-                tr.position = m_paddleStartPos.transform.position;
-            }
-        }
-    }
+        
     public void LevelComplete()
     {
         m_ball.SetSpeed(0.0f, 0.0f);
+    }
+
+    public void LevelStop()
+    {
+        Debug.Log("LevelEntities.LevelStop");
+        m_paddle.gameObject.SetActive(false);
+        m_ball.gameObject.SetActive(false);
     }
 
     public void LevelStart()
@@ -81,12 +61,8 @@ public class LevelEntities : MonoBehaviour
         Rigidbody2D brb = m_ball.gameObject.GetComponent<Rigidbody2D>();
         m_paddle.BallAttach(brb);
         m_ball.m_status = Ball.BallStatus.BallAttached;
-        Vector3 startPos = m_paddleStartPos.transform.localPosition;
-        m_paddle.gameObject.transform.position = new Vector3(startPos.x, startPos.y, startPos.z);
-        startPos = m_ballStartPos.transform.localPosition;
-        m_ball.gameObject.transform.position = new Vector3(startPos.x, startPos.y, startPos.z);
-        //m_ball.gameObject.transform.Translate(Vector3.zero);
-        //m_ball.gameObject.transform.Translate(m_ballStartPos.transform.localPosition);
+        m_paddle.gameObject.transform.position = m_paddleStartPos.transform.position;
+        m_ball.gameObject.transform.position = m_ballStartPos.transform.position;
 
     }
 
@@ -158,13 +134,8 @@ public class LevelEntities : MonoBehaviour
         m_ballNumber--;
         if (m_ballNumber <= 0)
         {
-            m_gameController.OnStateEnter(GameController.GCState.NONE);
+            m_gameController.LevelPaddleLost();
         }
 
-    }
-    public void PaddleLost()
-    {
-        m_paddle.gameObject.SetActive(false);
-        m_ball.gameObject.SetActive(false);
     }
 }

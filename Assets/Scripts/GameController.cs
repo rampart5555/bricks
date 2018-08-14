@@ -53,8 +53,7 @@ public class GameController : MonoBehaviour {
                     m_levelEntities.LevelLoad("level_01");
                     string[] entities_1= {"ball_mesh", "paddle_mesh_0" };
                     m_levelEnvironment.EnableEntities(entities_1);
-                    string[] entities_2={"ball", "paddle" };
-                    m_levelEntities.DisableEntities(entities_2);
+                    m_levelEntities.LevelStop();
                 }
                 break;
             case GCState.LEVEL_ENTRY_STATE_EXIT:
@@ -64,9 +63,8 @@ public class GameController : MonoBehaviour {
                 }
                 break;
             case GCState.LEVEL_START_STATE_ENTER:
-                {
-                    string[] entities = { "ball", "paddle" };
-                    m_levelEntities.EnableEntities(entities);
+                {                    
+                    m_levelEntities.LevelStart();
                 }
                 break;
 
@@ -92,6 +90,21 @@ public class GameController : MonoBehaviour {
         m_levelEnvAnimator.SetTrigger("level_cleared");
     }
 
+    public void LevelPaddleLost()
+    {
+        if (m_paddleSpare == 0)
+        {
+            Debug.Log("*** GAME OVER ***");
+            return;
+        }
+
+        m_levelEntities.LevelStop();
+        string trigger=string.Format("paddle_lost_{0}",m_paddleSpare);
+        m_levelEnvAnimator.SetTrigger(trigger);
+        m_paddleSpare--;
+
+    }
+
     public void LevelComplete()
     {
         if (m_levelComplete == false)
@@ -110,96 +123,12 @@ public class GameController : MonoBehaviour {
         //m_levelEntities.LevelLoad("level_01");
     }
 
-    public void OnStateEnter(GCState state)
-    {
-        Debug.LogFormat("GameController.OnStateEnter {0}", state);
-        /*
-        switch (state)
-        {
-            case GCState.GAME_PORTAL_OPEN:
-                {                    
-                    m_levelClear = false;
 
-                }
-                break;
-            case GCState.LEVEL_START:
-                {
-                    
-                }
-                break;
-            case GCState.PADDLE_RESTORE:
-                {
-                    if (m_paddleSpare == 0)
-                    {
-                        Debug.Log("GAME OVER");
-                    }
-                    else
-                    {
-                        m_levelEntities.PaddleLost();
-                        m_levelEnvironment.EnableEntities();
-                        m_levelEnvironment.PlayAnimation(string.Format("paddle_restore_{0}", 
-                            m_paddleSpare),GCState.PADDLE_RESTORE);
-                        m_paddleSpare--;
-                    }
-                }             
-                break;
-            case GCState.LEVEL_CLEAR:
-                {
-                    m_levelEnvironment.PlayAnimation("level_clear",GCState.LEVEL_CLEAR);
-                }
-                break;
-            case GCState.LEVEL_COMPLETED:
-                {                    
-                    m_levelClear = false;
-                }
-                break;
-            default:
-                break;    
-        }
-        */
-    }
-
-    public void OnStateExit(GCState state)
-    {
-        Debug.LogFormat("GameController.OnStateExit: {0}", state);
-        /*
-        switch (state)
-        {
-            case GCState.GAME_PORTAL_OPEN:
-                {
-                    m_levelEnvironment.PlayAnimation("level_start", GCState.LEVEL_START);                 
-                    //m_gamePortal.PlayAnimation("game_portal_close",GCState.NONE);
-                }
-                break;
-            case GCState.LEVEL_START:
-                {
-                    m_levelClear = false;
-                    //m_levelEnvironment.DisableEntities();
-                    m_levelEntities.LevelStart();
-                }
-                break;
-            case GCState.PADDLE_RESTORE:
-                {
-                    //m_levelEnvironment.DisableEntities();
-                    m_levelEntities.LevelStart();
-                }
-                break;
-            case GCState.LEVEL_CLEAR:
-                {                    
-                    m_levelEntities.LevelClear();
-                    m_levelClear = true;
-                }
-                break;
-            default:
-                break;    
-        }
-        */
-    }
    
     void FixedUpdate ()
     {
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {    
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;

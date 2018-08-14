@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class GamePortal : MonoBehaviour {
 
+    #if false
     Animation m_animation;
     GameController m_gameController;
     GameController.GCState m_state;
@@ -24,6 +25,7 @@ public class GamePortal : MonoBehaviour {
         m_gameController=gcObj.GetComponent<GameController>();
 
 	}
+
     public void PlayAnimation(string anim_name,GameController.GCState state)
     {
         m_state = state;
@@ -119,5 +121,5 @@ public class GamePortal : MonoBehaviour {
         m_animation = GetComponent<Animation>();
         m_animation.AddClip(clip,clip.name);
     }
-
+#endif
 }
