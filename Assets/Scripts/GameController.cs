@@ -14,7 +14,9 @@ public class GameController : MonoBehaviour {
         LEVEL_CLEARED_STATE_ENTER,
         LEVEL_CLEARED_STATE_EXIT,
     };
-        
+
+    public Text m_fpsGUI;
+
     public GameObject m_levelEnvironmentGO;
     public GameObject m_levelEntitiesGO;
 
@@ -25,6 +27,7 @@ public class GameController : MonoBehaviour {
     private bool m_levelComplete;
 
     int m_paddleSpare;
+    float m_deltaTime;
 
     Animator m_levelEnvAnimator;
 
@@ -42,8 +45,20 @@ public class GameController : MonoBehaviour {
         m_levelEnvAnimator = m_levelEnvironmentGO.GetComponent<Animator>();
 
 	}
-    public void SetState(GCState state)
+
+    void OnGUI()
     {
+        
+        float msec = m_deltaTime * 1000.0f;
+        float fps = 1.0f / m_deltaTime;
+        //string text = string.Format("{0:0.0} ms ({1:0.} fps)\n Entities:{2:0.0}", msec, fps,m_cacheList.Count);  
+        string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);  
+        m_fpsGUI.text = text;
+
+    }
+
+    public void SetState(GCState state)
+    {        
         switch (state)
         {
             case GCState.LEVEL_ENTRY_STATE_ENTER:
@@ -92,6 +107,11 @@ public class GameController : MonoBehaviour {
 
     public void LevelPaddleLost()
     {
+        if (m_doorRightIsOpen == true)
+        {
+            LevelComplete();
+            return;
+        }
         if (m_paddleSpare == 0)
         {
             Debug.Log("*** GAME OVER ***");
@@ -127,7 +147,7 @@ public class GameController : MonoBehaviour {
    
     void FixedUpdate ()
     {
-
+        m_deltaTime += (Time.unscaledDeltaTime - m_deltaTime) * 0.1f;   
         if (Input.GetMouseButtonUp(0))
         {    
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

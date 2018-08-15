@@ -6,7 +6,7 @@ public class LevelEntities : MonoBehaviour
 {   
     public GameObject m_paddleStartPos;
     public GameObject m_ballStartPos;
-
+    public GameObject m_brickDestroy;
     GameObject m_brickGO;
     Paddle m_paddle;
     Ball m_ball;
@@ -121,6 +121,7 @@ public class LevelEntities : MonoBehaviour
     public void RemoveBrick(GameObject brick)
     {
         Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
+        Instantiate(m_brickDestroy, brick.transform.position, Quaternion.identity);
         m_brickNumber--;
 
         if (m_brickNumber <= 0)
