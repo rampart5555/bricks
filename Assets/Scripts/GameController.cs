@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour {
         LEVEL_START_STATE_EXIT,
         LEVEL_CLEARED_STATE_ENTER,
         LEVEL_CLEARED_STATE_EXIT,
+        LEVEL_PADDLE_LOST_STATE_ENTER,
+        LEVEL_PADDLE_LOST_STATE_EXIT
     };
 
     public Text m_fpsGUI;
@@ -88,6 +90,11 @@ public class GameController : MonoBehaviour {
 
             case GCState.LEVEL_CLEARED_STATE_EXIT:
                 {                    
+                }            
+                break;
+            case GCState.LEVEL_PADDLE_LOST_STATE_EXIT:
+                {                    
+                    m_levelEnvironment.DisablePaddleMesh(m_paddleSpare);
                 }
                 break;
             default:

@@ -6,11 +6,20 @@ ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
+    100002: brick
+    100004: powerup
     400000: //RootNode
+    400002: brick
+    400004: powerup
     2100000: No Name
     2300000: //RootNode
+    2300002: brick
+    2300004: powerup
     3300000: //RootNode
+    3300002: brick
+    3300004: powerup
     4300000: brick
+    4300002: powerup
   externalObjects: {}
   materials:
     importMaterials: 1

@@ -11,17 +11,17 @@ public class LevelEnvironment: MonoBehaviour
 
     GameObject m_ballMesh;
     GameObject m_paddleMesh;
-    GameObject [] m_paddleMeshSlots;
+    GameObject [] m_paddleMeshSlot;
 
     void Awake()
     {
         
         m_ballMesh = transform.Find("ball_mesh").gameObject;
         m_paddleMesh = transform.Find("paddle_mesh_0").gameObject;
-        m_paddleMeshSlots = new GameObject[3];
+        m_paddleMeshSlot = new GameObject[3];
         for (int i = 0; i < 3; i++)
         {
-            m_paddleMeshSlots[i] = transform.Find(string.Format("paddle_mesh_{0}", i + 1)).gameObject;
+            m_paddleMeshSlot[i] = transform.Find(string.Format("paddle_mesh_{0}", i + 1)).gameObject;
         }
     }
 
@@ -29,6 +29,11 @@ public class LevelEnvironment: MonoBehaviour
     {     
         GameObject m_gameControllerGO = GameObject.FindGameObjectWithTag("GameController");
         m_gameController=m_gameControllerGO.GetComponent<GameController>();
+    }
+
+    public void DisablePaddleMesh(int slot)
+    {
+        m_paddleMeshSlot[slot].SetActive(false);
     }
 
     public void DoorRightOpenComplete()
