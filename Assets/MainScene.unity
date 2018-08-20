@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -836,6 +836,7 @@ GameObject:
   - component: {fileID: 880238482}
   - component: {fileID: 880238481}
   - component: {fileID: 880238480}
+  - component: {fileID: 880238484}
   m_Layer: 9
   m_Name: powerup
   m_TagString: Powerup
@@ -944,6 +945,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 880238478}
   m_Mesh: {fileID: 4300002, guid: d52b6b13167e51343bd1563f097e8b90, type: 3}
+--- !u!114 &880238484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 880238478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d11cf5590f35b4ab55b23d2104e88d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &987945701
 GameObject:
   m_ObjectHideFlags: 0

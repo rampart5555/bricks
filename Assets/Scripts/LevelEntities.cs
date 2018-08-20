@@ -21,9 +21,13 @@ public class LevelEntities : MonoBehaviour
     public ParticleSystem m_brickExplosion;
 
     private List<ParticleSystem> m_brickExplosionList;
+    private List<GameObject> m_ballList;
+    private List<GameObject> m_powerupList;
+    private List<GameObject> m_brickList;
 
     GameObject m_brickGO;
     GameObject m_powerupGO;
+    GameObject m_ballGO;
     Paddle m_paddle;
     Ball m_ball;
     Brick m_brick;
@@ -33,19 +37,27 @@ public class LevelEntities : MonoBehaviour
 
     void Start()
     {
-        m_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-        m_paddle = transform.Find("paddle").gameObject.GetComponent<Paddle>();
-        m_ball = transform.Find("ball").gameObject.GetComponent<Ball>();
         m_brickGO = transform.Find("brick").gameObject;
         m_powerupGO=transform.Find("powerup").gameObject;
+        m_ballGO=transform.Find("ball").gameObject;
+
+        m_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        m_paddle = transform.Find("paddle").gameObject.GetComponent<Paddle>();
+        m_ball = m_ballGO.GetComponent<Ball>();
+
+        m_ballList = new List<GameObject>();
+        m_powerupList = new List<GameObject>();
+        m_brickList = new List<GameObject>();
         m_ballNumber = 1;
         InstatiateEntities();
 
     }
+
     void LateUpdate()
     {
         //Debug.Log("lateupdate");
     }
+
     private void InstatiateEntities()
     {
         Debug.Log("LevelEntities.InstatiateEntities");
@@ -83,6 +95,14 @@ public class LevelEntities : MonoBehaviour
         Debug.Log("LevelEntities.LevelStop");
         m_paddle.gameObject.SetActive(false);
         m_ball.gameObject.SetActive(false);
+        foreach(GameObject go in m_ballList)
+        {
+            go.SetActive(false);
+        }
+        foreach(GameObject go in m_powerupList)
+        {
+            go.SetActive(false);
+        }
     }
 
     public void LevelStart()
@@ -101,6 +121,21 @@ public class LevelEntities : MonoBehaviour
     void LevelReset()
     {
         m_brickNumber = 0;
+        foreach(GameObject go in m_ballList)
+        {
+            Destroy(go);
+        }
+        m_ballList.Clear();
+        foreach(GameObject go in m_powerupList)
+        {
+            Destroy(go);
+        }
+        m_powerupList.Clear();
+        foreach (GameObject go in m_brickList)
+        {
+            Destroy(go);
+        }
+        m_brickList.Clear();
     }
 
     public void LevelLoad(string level)
@@ -163,6 +198,7 @@ public class LevelEntities : MonoBehaviour
         //GameObject brick = (GameObject)m_brickPrefab.GetPrefab (brick_type);
 
         GameObject brick_obj=Instantiate (m_brickGO, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
+        m_brickList.Add(brick_obj);
         brick_obj.transform.parent = transform;
         Brick brick = brick_obj.GetComponent<Brick>();
         brick.m_brickType = (BrickType)brick_id;
@@ -172,17 +208,35 @@ public class LevelEntities : MonoBehaviour
 
 
     }
+
     public void AddPowerup(GameObject brick_obj)
     {        
         Brick brick = brick_obj.GetComponent<Brick>();
         if (brick.m_powerupType == PowerupType.POWERUP_NONE)
             return;
         Debug.LogFormat("LevelEntities.AddPowerup {0}", brick.m_powerupType);
-        GameObject pup = Instantiate(m_powerupGO, brick_obj.transform.position, Quaternion.identity);
-        pup.SetActive(true);
-        Rigidbody2D rb = pup.GetComponent<Rigidbody2D>();
+        GameObject pup_go = Instantiate(m_powerupGO, brick_obj.transform.position, Quaternion.identity);
+        pup_go.transform.parent = transform;
+        m_powerupList.Add(pup_go);
+        pup_go.SetActive(true);
+        Rigidbody2D rb = pup_go.GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(0.0f, -1.5f);
+        Powerup pup = pup_go.GetComponent<Powerup>();
+        pup.m_powerupType = brick.m_powerupType;
 
+    }
+
+    public void AddBalls()
+    {        
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject ball_go = Instantiate(m_ballGO, Vector3.zero, Quaternion.identity);
+            ball_go.transform.parent = transform;
+            m_ballList.Add(ball_go);
+            Ball ball = ball_go.GetComponent<Ball>();
+            ball.SetSpeed(-1.0f + (float)i, 1.0f);
+            m_ballNumber++;
+        }
     }
 
     public void RemoveBrick(GameObject brick)
@@ -206,6 +260,16 @@ public class LevelEntities : MonoBehaviour
         {
             m_gameController.LevelPaddleLost();
         }
+        ball.SetActive(false);
+    }
 
+    public void RemovePowerup(GameObject powerup)
+    {
+        Powerup pup = powerup.GetComponent<Powerup>();
+        if (pup.m_powerupType == PowerupType.POWERUP_BALLS)
+        {
+            AddBalls();
+        }
+        powerup.SetActive(false);
     }
 }

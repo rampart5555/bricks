@@ -10,6 +10,7 @@ public class Paddle : MonoBehaviour {
 
     private TargetJoint2D m_targetJoint;
     private GameController m_gameController;
+    private LevelEntities m_levelEntities;
     private float m_deltaTime;
 	private bool m_cannonAttached;
 
@@ -20,6 +21,8 @@ public class Paddle : MonoBehaviour {
         m_targetJoint = gameObject.GetComponent<TargetJoint2D> ();
         GameObject gc_obj = GameObject.FindWithTag("GameController");
         m_gameController = gc_obj.GetComponent<GameController> ();
+        GameObject le=GameObject.FindWithTag("LevelEntities");
+        m_levelEntities=le.GetComponent<LevelEntities>();
 		m_cannonAttached = false;
         SetPolyCollider();
 
@@ -83,6 +86,7 @@ public class Paddle : MonoBehaviour {
     {
         if (col.gameObject.tag == "Powerup")
         {    
+            Powerup pup_obj = col.gameObject.GetComponent<Powerup> ();
             /*
 			Powerup pup_obj = col.gameObject.GetComponent<Powerup> ();
 			if (pup_obj.m_powerupType == Powerup.PowerupType.powerup_cannon) 
@@ -92,6 +96,7 @@ public class Paddle : MonoBehaviour {
             //m_gameController.RemovePowerup (col.gameObject);
             col.gameObject.SetActive(false);
             */
+            m_levelEntities.RemovePowerup(col.gameObject);
         }
         else if (col.gameObject.name == "wall_right")
         {

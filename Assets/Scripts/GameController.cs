@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour {
     private bool m_levelComplete;
 
     int m_paddleSpare;
+    int m_levelNumber;
     float m_deltaTime;
 
     Animator m_levelEnvAnimator;
@@ -45,7 +46,7 @@ public class GameController : MonoBehaviour {
         m_levelEnvironment = m_levelEnvironmentGO.GetComponent<LevelEnvironment>();
         m_levelEntities = m_levelEntitiesGO.GetComponent<LevelEntities>();
         m_levelEnvAnimator = m_levelEnvironmentGO.GetComponent<Animator>();
-
+        m_levelNumber = 1;
 	}
 
     void OnGUI()
@@ -67,7 +68,9 @@ public class GameController : MonoBehaviour {
                 {
                     m_doorRightIsOpen = false;
                     m_levelComplete = false;
-                    m_levelEntities.LevelLoad("level_01");
+                    string level_str=string.Format("level_{0:00}",m_levelNumber);
+                    m_levelEntities.LevelLoad(level_str);
+                    m_levelNumber++;
                     string[] entities_1= {"ball_mesh", "paddle_mesh_0" };
                     m_levelEnvironment.EnableEntities(entities_1);
                     m_levelEntities.LevelStop();
