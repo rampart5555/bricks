@@ -8,18 +8,28 @@ ModelImporter:
     100000: //RootNode
     100002: brick
     100004: powerup
+    100006: Plane
+    100008: bullet
     400000: //RootNode
     400002: brick
     400004: powerup
+    400006: Plane
+    400008: bullet
     2100000: No Name
     2300000: //RootNode
     2300002: brick
     2300004: powerup
+    2300006: Plane
+    2300008: bullet
     3300000: //RootNode
     3300002: brick
     3300004: powerup
+    3300006: Plane
+    3300008: bullet
     4300000: brick
     4300002: powerup
+    4300004: Plane
+    4300006: bullet
   externalObjects: {}
   materials:
     importMaterials: 1

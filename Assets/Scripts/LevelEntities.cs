@@ -20,14 +20,18 @@ public class LevelEntities : MonoBehaviour
     public GameObject m_ballStartPos;
     public ParticleSystem m_brickExplosion;
 
+
     private List<ParticleSystem> m_brickExplosionList;
     private List<GameObject> m_ballList;
     private List<GameObject> m_powerupList;
     private List<GameObject> m_brickList;
+    private Queue<GameObject> m_bulletList;
 
     GameObject m_brickGO;
     GameObject m_powerupGO;
     GameObject m_ballGO;
+    GameObject m_bulletGO;
+
     Paddle m_paddle;
     Ball m_ball;
     Brick m_brick;
@@ -61,12 +65,21 @@ public class LevelEntities : MonoBehaviour
     private void InstatiateEntities()
     {
         Debug.Log("LevelEntities.InstatiateEntities");
+        int i;
         m_brickExplosionList = new List<ParticleSystem>();
-        for (int i = 0; i < 20; i++)
+        for (i = 0; i < 20; i++)
         {
             ParticleSystem brick_exp = Instantiate(m_brickExplosion);
             brick_exp.Stop();
             m_brickExplosionList.Add(brick_exp);
+        }
+
+        m_bulletList = new Queue<GameObject> (10);
+        for (i = 0; i < 10; i++) 
+        {
+            GameObject bullet = Instantiate (m_bulletGO);
+            bullet.SetActive (false);
+            m_bulletList.Enqueue (bullet);
         }
     }
 
@@ -206,7 +219,6 @@ public class LevelEntities : MonoBehaviour
 
         m_brickNumber++;
 
-
     }
 
     public void AddPowerup(GameObject brick_obj)
@@ -237,6 +249,11 @@ public class LevelEntities : MonoBehaviour
             ball.SetSpeed(-1.0f + (float)i, 1.0f);
             m_ballNumber++;
         }
+    }
+
+    public void AddBullet()
+    {
+        
     }
 
     public void RemoveBrick(GameObject brick)
