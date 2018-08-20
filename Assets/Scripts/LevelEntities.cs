@@ -253,7 +253,8 @@ public class LevelEntities : MonoBehaviour
 
     public void AddBullet()
     {
-        
+        GameObject bullet = m_bulletList.Dequeue ();
+        bullet.SetActive (true);
     }
 
     public void RemoveBrick(GameObject brick)
