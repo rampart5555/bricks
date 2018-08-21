@@ -11,21 +11,19 @@ public class Paddle : MonoBehaviour {
     private TargetJoint2D m_targetJoint;
     private GameController m_gameController;
     private LevelEntities m_levelEntities;
-    private float m_deltaTime;
-	private bool m_cannonAttached;
-
+    public Vector3 m_bulletPos;
+    private bool m_cannonAttached;
 
 	void Start () 
     {   
-        m_deltaTime = 0.0f;
+        
         m_targetJoint = gameObject.GetComponent<TargetJoint2D> ();
         GameObject gc_obj = GameObject.FindWithTag("GameController");
         m_gameController = gc_obj.GetComponent<GameController> ();
         GameObject le=GameObject.FindWithTag("LevelEntities");
-        m_levelEntities=le.GetComponent<LevelEntities>();
-		m_cannonAttached = false;
+        m_levelEntities=le.GetComponent<LevelEntities>();		
         SetPolyCollider();
-
+        m_cannonAttached = false;
 	}
     
     void SetPolyCollider()
@@ -65,37 +63,22 @@ public class Paddle : MonoBehaviour {
         pfj.enabled = true;
         pfj.connectedBody = ball;
     }
-
-/*
-	void FixedUpdate () 
-    {        
-       
-		if (m_cannonAttached == true) 
-		{
-			m_deltaTime += Time.deltaTime;
-			if (m_deltaTime > 1.0)
-			{
-				//m_gameController.AddBullet();
-				//Debug.Log("Fire bullet");
-				m_deltaTime = 0.0f;
-			}
-		}
-	}
-*/
+        
     void OnCollisionEnter2D(Collision2D col)
     {
+        
         if (col.gameObject.tag == "Powerup")
         {    
             Powerup pup_obj = col.gameObject.GetComponent<Powerup> ();
-            /*
-			Powerup pup_obj = col.gameObject.GetComponent<Powerup> ();
-			if (pup_obj.m_powerupType == Powerup.PowerupType.powerup_cannon) 
+            			
+			if (pup_obj.m_powerupType == LevelEntities.PowerupType.POWERUP_CANNON) 
 			{
-				m_cannonAttached = true;
+                if (m_cannonAttached == false)
+                {
+                    InvokeRepeating("LaunchProjectile", 1.0f, 2.0f);
+                    m_cannonAttached = true;
+                }
 			}
-            //m_gameController.RemovePowerup (col.gameObject);
-            col.gameObject.SetActive(false);
-            */
             m_levelEntities.RemovePowerup(col.gameObject);
         }
         else if (col.gameObject.name == "wall_right")
@@ -105,6 +88,11 @@ public class Paddle : MonoBehaviour {
                 m_gameController.LevelComplete();
             }
         }
+    }
+
+    void LaunchProjectile()
+    {
+        m_levelEntities.AddBullet(transform.localPosition+m_bulletPos);
     }
 }
 

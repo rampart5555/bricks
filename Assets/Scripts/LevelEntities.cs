@@ -44,6 +44,7 @@ public class LevelEntities : MonoBehaviour
         m_brickGO = transform.Find("brick").gameObject;
         m_powerupGO=transform.Find("powerup").gameObject;
         m_ballGO=transform.Find("ball").gameObject;
+        m_bulletGO=transform.Find("bullet").gameObject;
 
         m_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         m_paddle = transform.Find("paddle").gameObject.GetComponent<Paddle>();
@@ -251,12 +252,19 @@ public class LevelEntities : MonoBehaviour
         }
     }
 
-    public void AddBullet()
+    public void AddBullet(Vector3 pos)
     {
         GameObject bullet = m_bulletList.Dequeue ();
         bullet.SetActive (true);
+        bullet.transform.position = pos;
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        rb.velocity = new Vector2(0.0f, 3.0f);
     }
-
+    public void RemoveBullet(GameObject bullet)
+    {
+        m_bulletList.Enqueue(bullet);
+        bullet.SetActive(false);
+    }
     public void RemoveBrick(GameObject brick)
     {
         Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
