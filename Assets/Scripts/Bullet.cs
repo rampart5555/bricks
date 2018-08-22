@@ -15,6 +15,7 @@ public class Bullet : MonoBehaviour
         if (col.gameObject.tag == "Brick") 
         {   
             m_levelEntities.RemoveBullet(gameObject);
+            m_levelEntities.RemoveBrick(col.gameObject);
         }
         else if (col.gameObject.name == "wall_top")
         {                       

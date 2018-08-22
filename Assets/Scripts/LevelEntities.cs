@@ -38,6 +38,7 @@ public class LevelEntities : MonoBehaviour
     GameController m_gameController;
     int m_brickNumber;
     int m_ballNumber;
+    int m_levelScore;
 
     void Start()
     {
@@ -54,6 +55,7 @@ public class LevelEntities : MonoBehaviour
         m_powerupList = new List<GameObject>();
         m_brickList = new List<GameObject>();
         m_ballNumber = 1;
+        m_levelScore = 0;
         InstatiateEntities();
 
     }
@@ -107,6 +109,7 @@ public class LevelEntities : MonoBehaviour
     public void LevelStop()
     {
         Debug.Log("LevelEntities.LevelStop");
+        m_paddle.Reset();
         m_paddle.gameObject.SetActive(false);
         m_ball.gameObject.SetActive(false);
         foreach(GameObject go in m_ballList)
@@ -215,7 +218,7 @@ public class LevelEntities : MonoBehaviour
         m_brickList.Add(brick_obj);
         brick_obj.transform.parent = transform;
         Brick brick = brick_obj.GetComponent<Brick>();
-        brick.m_brickType = (BrickType)brick_id;
+        brick.SetBrickType((BrickType)brick_id);
         brick.m_powerupType = (PowerupType)powerup_id;
 
         m_brickNumber++;
@@ -260,14 +263,24 @@ public class LevelEntities : MonoBehaviour
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(0.0f, 3.0f);
     }
+
     public void RemoveBullet(GameObject bullet)
     {
         m_bulletList.Enqueue(bullet);
         bullet.SetActive(false);
     }
+
     public void RemoveBrick(GameObject brick)
-    {
+    {        
         Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
+        Brick br = brick.GetComponent<Brick>();
+
+        if (br.IsHit() > 0)
+            return;
+        
+        m_levelScore += br.GetValue();
+        m_gameController.UpdateScore(m_levelScore);
+        brick.SetActive(false);
         AddBrickExplosion(brick);
         m_brickNumber--;
 

@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour {
     };
 
     public Text m_fpsGUI;
+    public Text m_scoreGUI;
 
     public GameObject m_levelEnvironmentGO;
     public GameObject m_levelEntitiesGO;
@@ -58,6 +59,12 @@ public class GameController : MonoBehaviour {
         string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);  
         m_fpsGUI.text = text;
 
+    }
+
+    public void UpdateScore(int score)
+    {
+        string text=string.Format("Score {0}", score);  
+        m_scoreGUI.text = text;
     }
 
     public void SetState(GCState state)
@@ -185,6 +192,5 @@ public class GameController : MonoBehaviour {
                 m_levelEntities.MouseDrag(hit.point);
             } 
         }
-
     }
 }

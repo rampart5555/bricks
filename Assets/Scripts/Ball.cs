@@ -70,11 +70,9 @@ public class Ball : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D col)
 	{
-		//Debug.Log (col.gameObject.name);
-		//AudioSource.PlayClipAtPoint (m_brickHit, transform.position);
+		
         if (col.gameObject.tag == "Brick")
-        {                                   
-            col.gameObject.SetActive(false);
+        {                  
             m_levelEntities.RemoveBrick(col.gameObject);
         }
         else if (col.gameObject.tag == "Paddle")

@@ -64,6 +64,22 @@ public class Paddle : MonoBehaviour {
         pfj.connectedBody = ball;
     }
         
+    public void CannonAttach()
+    {
+        if (m_cannonAttached == false)
+        {
+            m_cannonAttached = true;
+            InvokeRepeating("LaunchProjectile", 1.0f, 2.0f);
+
+        }
+    }
+
+    public void Reset()
+    {
+        if (m_cannonAttached == true)
+            CancelInvoke("LaunchProjectile");
+    }
+
     void OnCollisionEnter2D(Collision2D col)
     {
         
@@ -73,11 +89,7 @@ public class Paddle : MonoBehaviour {
             			
 			if (pup_obj.m_powerupType == LevelEntities.PowerupType.POWERUP_CANNON) 
 			{
-                if (m_cannonAttached == false)
-                {
-                    InvokeRepeating("LaunchProjectile", 1.0f, 2.0f);
-                    m_cannonAttached = true;
-                }
+                CannonAttach();
 			}
             m_levelEntities.RemovePowerup(col.gameObject);
         }
