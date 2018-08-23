@@ -23,23 +23,23 @@ public class Brick : MonoBehaviour
         {
             case LevelEntities.BrickType.BRICK_BLUE:
                 m_value = 10;
-                m_hits = 2;
+                m_hits = 1;
                 break;
             case LevelEntities.BrickType.BRICK_BROWN:
-                m_value = 10;
-                m_hits = 2;
+                m_value = 15;
+                m_hits = 1;
                 break;              
             case LevelEntities.BrickType.BRICK_RED:
-                m_value = 10;
-                m_hits = 2;
+                m_value = 20;
+                m_hits = 1;
                 break;
             case LevelEntities.BrickType.BRICK_WHITE:
-                m_value = 10;
-                m_hits = 2;
+                m_value = 25;
+                m_hits = 1;
                 break;
             default:
                 m_value = 0;
-                m_hits = 2;
+                m_hits = 1;
                 break;
         }
     }

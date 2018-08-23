@@ -683,6 +683,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 181b4d0a61813eb42a3db92cafd55d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_portalCloseEffectGO: {fileID: 1966764695039994, guid: f4940859b7957154891f995174a85e94,
+    type: 2}
 --- !u!95 &683651727
 Animator:
   serializedVersion: 3

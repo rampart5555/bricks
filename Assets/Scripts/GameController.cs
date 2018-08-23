@@ -142,6 +142,12 @@ public class GameController : MonoBehaviour {
 
     }
 
+    public void GamePortalCloseEvent()
+    {
+        Debug.Log("GameController.GamePortalCloseEvent");
+        m_levelEntities.LevelStop();
+    }
+
     public void LevelComplete()
     {
         if (m_levelComplete == false)
@@ -177,6 +183,7 @@ public class GameController : MonoBehaviour {
                 {
                     Debug.Log("Button Continue pressed");
                     m_levelEnvAnimator.SetTrigger("level_entry");
+                    //m_levelEnvironment.GamePortalCloseEvent();
                 }
                 else
                     m_levelEntities.MouseRelease();

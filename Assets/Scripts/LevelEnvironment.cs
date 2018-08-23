@@ -5,13 +5,15 @@ using UnityEditor;
 
 public class LevelEnvironment: MonoBehaviour
 {
+    public GameObject m_portalCloseEffectGO;
+    ParticleSystem m_portalCloseEffect;
     GameObject m_gameControllerGO;
     GameController m_gameController;
-
 
     GameObject m_ballMesh;
     GameObject m_paddleMesh;
     GameObject [] m_paddleMeshSlot;
+
 
     void Awake()
     {
@@ -23,6 +25,9 @@ public class LevelEnvironment: MonoBehaviour
         {
             m_paddleMeshSlot[i] = transform.Find(string.Format("paddle_mesh_{0}", i + 1)).gameObject;
         }
+        GameObject go = Instantiate(m_portalCloseEffectGO, new Vector3(0.0f, 0.0f, -2.0f), Quaternion.identity);
+        go.transform.parent = transform;
+        m_portalCloseEffect = go.GetComponent<ParticleSystem>();
     }
 
     void Start()
@@ -34,6 +39,12 @@ public class LevelEnvironment: MonoBehaviour
     public void DisablePaddleMesh(int slot)
     {
         m_paddleMeshSlot[slot].SetActive(false);
+    }
+
+    public void GamePortalCloseEvent()
+    {    
+        m_gameController.GamePortalCloseEvent();   
+        m_portalCloseEffect.Play();
     }
 
     public void DoorRightOpenComplete()
