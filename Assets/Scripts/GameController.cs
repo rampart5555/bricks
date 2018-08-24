@@ -48,6 +48,7 @@ public class GameController : MonoBehaviour {
         m_levelEntities = m_levelEntitiesGO.GetComponent<LevelEntities>();
         m_levelEnvAnimator = m_levelEnvironmentGO.GetComponent<Animator>();
         m_levelNumber = 1;
+        m_levelEnvironment.SetLevelNumber(m_levelNumber);
 	}
 
     void OnGUI()
@@ -58,6 +59,7 @@ public class GameController : MonoBehaviour {
         //string text = string.Format("{0:0.0} ms ({1:0.} fps)\n Entities:{2:0.0}", msec, fps,m_cacheList.Count);  
         string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);  
         m_fpsGUI.text = text;
+
 
     }
 
@@ -76,11 +78,12 @@ public class GameController : MonoBehaviour {
                     m_doorRightIsOpen = false;
                     m_levelComplete = false;
                     string level_str=string.Format("level_{0:00}",m_levelNumber);
+                    m_levelEntities.LevelStop();
                     m_levelEntities.LevelLoad(level_str);
-                    m_levelNumber++;
                     string[] entities_1= {"ball_mesh", "paddle_mesh_0" };
                     m_levelEnvironment.EnableEntities(entities_1);
-                    m_levelEntities.LevelStop();
+                    m_levelNumber++;
+
                 }
                 break;
             case GCState.LEVEL_ENTRY_STATE_EXIT:
@@ -157,7 +160,9 @@ public class GameController : MonoBehaviour {
             m_levelComplete = true;
             string[] entities = { "game_portal_top", "game_portal_bottom"};
             m_levelEnvironment.EnableEntities(entities);
+            m_levelEnvironment.SetLevelNumber(m_levelNumber);
             m_levelEntities.LevelComplete();
+
         }
     }
 

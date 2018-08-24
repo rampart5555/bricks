@@ -6,13 +6,16 @@ using UnityEditor;
 public class LevelEnvironment: MonoBehaviour
 {
     public GameObject m_portalCloseEffectGO;
+    public GameObject m_levelNumberGO;
     ParticleSystem m_portalCloseEffect;
+    TextMesh m_levelNumber;
     GameObject m_gameControllerGO;
     GameController m_gameController;
 
     GameObject m_ballMesh;
     GameObject m_paddleMesh;
     GameObject [] m_paddleMeshSlot;
+
 
 
     void Awake()
@@ -28,12 +31,18 @@ public class LevelEnvironment: MonoBehaviour
         GameObject go = Instantiate(m_portalCloseEffectGO, new Vector3(0.0f, 0.0f, -2.0f), Quaternion.identity);
         go.transform.parent = transform;
         m_portalCloseEffect = go.GetComponent<ParticleSystem>();
+        m_levelNumber = m_levelNumberGO.GetComponent<TextMesh>();
     }
 
     void Start()
     {     
         GameObject m_gameControllerGO = GameObject.FindGameObjectWithTag("GameController");
         m_gameController=m_gameControllerGO.GetComponent<GameController>();
+    }
+
+    public void SetLevelNumber(int levelnr)
+    {
+        m_levelNumber.text = "Level " + levelnr;
     }
 
     public void DisablePaddleMesh(int slot)
