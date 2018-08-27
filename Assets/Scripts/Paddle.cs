@@ -70,14 +70,16 @@ public class Paddle : MonoBehaviour {
         {
             m_cannonAttached = true;
             InvokeRepeating("LaunchProjectile", 1.0f, 2.0f);
-
         }
     }
 
     public void Reset()
     {
         if (m_cannonAttached == true)
+        {
             CancelInvoke("LaunchProjectile");
+            m_cannonAttached = false;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D col)

@@ -18,13 +18,14 @@ public class GameController : MonoBehaviour {
     };
 
     public Text m_fpsGUI;
-    public Text m_scoreGUI;
+    public GameObject m_scoreGO;
 
     public GameObject m_levelEnvironmentGO;
     public GameObject m_levelEntitiesGO;
 
     LevelEnvironment m_levelEnvironment;
     LevelEntities  m_levelEntities;
+    TextMesh m_score;
 
     public bool m_doorRightIsOpen;
     private bool m_levelComplete;
@@ -47,6 +48,7 @@ public class GameController : MonoBehaviour {
         m_levelEnvironment = m_levelEnvironmentGO.GetComponent<LevelEnvironment>();
         m_levelEntities = m_levelEntitiesGO.GetComponent<LevelEntities>();
         m_levelEnvAnimator = m_levelEnvironmentGO.GetComponent<Animator>();
+        m_score = m_scoreGO.GetComponent<TextMesh>();
         m_levelNumber = 1;
         m_levelEnvironment.SetLevelNumber(m_levelNumber);
 	}
@@ -65,8 +67,8 @@ public class GameController : MonoBehaviour {
 
     public void UpdateScore(int score)
     {
-        string text=string.Format("Score {0}", score);  
-        m_scoreGUI.text = text;
+        string text=string.Format(" {0} ", score);  
+        m_score.text = text;
     }
 
     public void SetState(GCState state)

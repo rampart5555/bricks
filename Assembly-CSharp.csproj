@@ -69,6 +69,7 @@
      <None Include="Assets\Resources\Levels\level_03.xml" />
      <None Include="Assets\Resources\Levels\level_01.xml" />
      <None Include="Assets\Resources\Levels\level_02.xml" />
+     <None Include="Assets\Resources\Levels\level_04.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

@@ -33,6 +33,7 @@ ModelImporter:
     100050: button_continue
     100052: game_portal_bottom
     100054: game_portal_top
+    100056: hud
     400000: background
     400002: ball
     400004: ball_start_pos
@@ -61,6 +62,7 @@ ModelImporter:
     400050: button_continue
     400052: game_portal_bottom
     400054: game_portal_top
+    400056: hud
     2100000: No Name
     2300000: background
     2300002: ball
@@ -79,6 +81,7 @@ ModelImporter:
     2300028: button_continue
     2300030: game_portal_bottom
     2300032: game_portal_top
+    2300034: hud
     3300000: background
     3300002: ball
     3300004: Cube.002
@@ -96,6 +99,7 @@ ModelImporter:
     3300028: button_continue
     3300030: game_portal_bottom
     3300032: game_portal_top
+    3300034: hud
     4300000: paddle
     4300002: ball
     4300004: door_left
@@ -113,6 +117,7 @@ ModelImporter:
     4300028: game_portal_bottom
     4300030: button_continue
     4300032: game_portal_top
+    4300034: hud
   externalObjects: {}
   materials:
     importMaterials: 1
