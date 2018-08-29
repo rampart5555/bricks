@@ -21,21 +21,46 @@ public class Brick : MonoBehaviour
         m_brickType = btype;
         switch (btype)
         {
-            case LevelEntities.BrickType.BRICK_BLUE:
-                m_value = 10;
+            case LevelEntities.BrickType.BRICK_WHITE:
+                m_value = 50;
                 m_hits = 1;
                 break;
-            case LevelEntities.BrickType.BRICK_BROWN:
-                m_value = 15;
+
+            case LevelEntities.BrickType.BRICK_ORANGE:
+                m_value = 60;
+                m_hits = 1;
+                break;
+            case LevelEntities.BrickType.BRICK_LIGHTBLUE:
+                m_value = 70;
                 m_hits = 1;
                 break;              
-            case LevelEntities.BrickType.BRICK_RED:
-                m_value = 20;
+            case LevelEntities.BrickType.BRICK_GREEN:
+                m_value = 80;
                 m_hits = 1;
                 break;
-            case LevelEntities.BrickType.BRICK_WHITE:
-                m_value = 25;
-                m_hits = 1;
+            case LevelEntities.BrickType.BRICK_RED:
+                m_value = 90;
+                m_hits = 2;
+                break;
+            case LevelEntities.BrickType.BRICK_BLUE:
+                m_value = 100;
+                m_hits = 2;
+                break;
+            case LevelEntities.BrickType.BRICK_PINK:
+                m_value = 110;
+                m_hits = 3;
+                break;
+            case LevelEntities.BrickType.BRICK_YELLOW:
+                m_value = 120;
+                m_hits = 3;
+                break;
+            case LevelEntities.BrickType.BRICK_SILVER:
+                m_value = 200;
+                m_hits = 5;
+                break;
+            case LevelEntities.BrickType.BRICK_GOLD:
+                m_value = 1000;
+                m_hits = 8;
                 break;
             default:
                 m_value = 0;

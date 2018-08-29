@@ -1,20 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+COLOR_MAP = {
+    "252,252,252" => 1, # white
+    "252,116,96" => 2, # orange
+    "60,188,252" => 3, # light blue
+    "128,208,16" => 4, # green
+    "216,40,0" => 5, # red
+    "0,112,236" => 6, # blue
+    "252,116,180" => 7, # pink
+    "252,152,56" => 8, # yellow
+    "188,188,188" => 9, # silver
+    "240,188,60" => 10 # gold
+}
+*/
 public class LevelEntities : MonoBehaviour 
 {   
     public enum BrickType{
         BRICK_NONE=0,
-        BRICK_BROWN,
+        BRICK_WHITE,
+        BRICK_ORANGE,
+        BRICK_LIGHTBLUE,
+        BRICK_GREEN,
         BRICK_RED,
         BRICK_BLUE,
-        BRICK_WHITE
+        BRICK_PINK,
+        BRICK_YELLOW,
+        BRICK_SILVER,
+        BRICK_GOLD
     };
+
     public enum PowerupType{
         POWERUP_NONE=0,
-        POWERUP_CANNON=5,
-        POWERUP_BALLS=6
+        POWERUP_CANNON=11,
+        POWERUP_BALLS=12,
+        POWERUP_SLOW=13,
+        POWERUP_FAST=14,
+        POWERUP_LIFE=15
     };
     public GameObject m_paddleStartPos;
     public GameObject m_ballStartPos;
@@ -62,7 +85,24 @@ public class LevelEntities : MonoBehaviour
 
     void LateUpdate()
     {
-        //Debug.Log("lateupdate");
+        
+        for(int i = m_brickList.Count - 1; i >= 0; i--)
+        {
+            GameObject brickGO = m_brickList[i];
+            if (brickGO.activeSelf == false)
+            {
+                Brick br = brickGO.GetComponent<Brick>();
+                m_levelScore += br.GetValue();
+                m_gameController.UpdateScore(m_levelScore);
+                m_brickNumber--;
+                Destroy(brickGO);
+                m_brickList.RemoveAt(i);
+            }  
+            if (m_brickList.Count == 0)
+            {
+                m_gameController.LevelCleared();
+            }
+        }
     }
 
     private void InstatiateEntities()
@@ -278,16 +318,9 @@ public class LevelEntities : MonoBehaviour
         if (br.IsHit() > 0)
             return;
         
-        m_levelScore += br.GetValue();
-        m_gameController.UpdateScore(m_levelScore);
         brick.SetActive(false);
         AddBrickExplosion(brick);
-        m_brickNumber--;
 
-        if (m_brickNumber <= 0)
-        {
-            m_gameController.LevelCleared();
-        }
         AddPowerup(brick);
     }
 
