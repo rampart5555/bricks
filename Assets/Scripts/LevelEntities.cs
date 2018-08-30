@@ -33,11 +33,13 @@ public class LevelEntities : MonoBehaviour
 
     public enum PowerupType{
         POWERUP_NONE=0,
-        POWERUP_CANNON=11,
-        POWERUP_BALLS=12,
-        POWERUP_SLOW=13,
-        POWERUP_FAST=14,
-        POWERUP_LIFE=15
+        POWERUP_BALLS=11,
+        POWERUP_CANNON=12,
+        POWERUP_FAST=13,
+        POWERUP_SLOW=14,
+        POWERUP_LIFE=15,
+        POWERUP_EXIT=16
+            
     };
     public GameObject m_paddleStartPos;
     public GameObject m_ballStartPos;
@@ -247,7 +249,7 @@ public class LevelEntities : MonoBehaviour
 
     void AddBrick(int  i, int j, int brick_id, int powerup_id)
     {
-        Debug.Log("LevelEntities.AddBrick");
+        //Debug.Log("LevelEntities.AddBrick");
         float x = 1.2f - i * 0.2f - 0.1f;
         float y = 1.4f - j * 0.1f - 0.1f;
         //Brick.BrickType brick_type = (Brick.BrickType)brick_id;
@@ -312,7 +314,7 @@ public class LevelEntities : MonoBehaviour
 
     public void RemoveBrick(GameObject brick)
     {        
-        Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
+        //Debug.LogFormat("LevelEntities.RemoveBrick {0}", m_brickNumber);
         Brick br = brick.GetComponent<Brick>();
 
         if (br.IsHit() > 0)
