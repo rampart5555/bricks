@@ -16,7 +16,7 @@
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="tiles.svg"
-   inkscape:export-filename="C:\g_dev\bricks\Assets_src\textures\bricks.png"
+   inkscape:export-filename="C:\g_dev\bricks\Assets_src\textures\tiles.png"
    inkscape:export-xdpi="96.000008"
    inkscape:export-ydpi="96.000008">
   <defs
@@ -35,10 +35,10 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="1816"
-     inkscape:window-height="937"
-     inkscape:window-x="45"
-     inkscape:window-y="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5">

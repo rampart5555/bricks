@@ -2,13 +2,14 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelEntities.cs">
     <Files>
-      <File FileName="Assets\Scripts\LevelEntities.cs" Line="87" Column="6" />
-      <File FileName="Assets\Scripts\Brick.cs" Line="63" Column="27" />
+      <File FileName="Assets\Scripts\LevelEntities.cs" Line="167" Column="17" />
+      <File FileName="Assets\Scripts\Brick.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Ball.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GameController.cs" Line="25" Column="5" />
-      <File FileName="Assets\Scripts\Paddle.cs" Line="95" Column="1" />
+      <File FileName="Assets\Scripts\GameController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Paddle.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Bullet.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\LevelEnvironment.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Powerup.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

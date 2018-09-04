@@ -59,8 +59,8 @@ public class LevelEntities : MonoBehaviour
 
     Paddle m_paddle;
     Ball m_ball;
-    Brick m_brick;
     GameController m_gameController;
+
     int m_brickNumber;
     int m_ballNumber;
     int m_levelScore;
@@ -74,12 +74,11 @@ public class LevelEntities : MonoBehaviour
 
         m_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         m_paddle = transform.Find("paddle").gameObject.GetComponent<Paddle>();
-        m_ball = m_ballGO.GetComponent<Ball>();
+        //m_ball = m_ballGO.GetComponent<Ball>();
 
         m_ballList = new List<GameObject>();
         m_powerupList = new List<GameObject>();
         m_brickList = new List<GameObject>();
-        m_ballNumber = 1;
         m_levelScore = 0;
         InstatiateEntities();
 
@@ -87,8 +86,8 @@ public class LevelEntities : MonoBehaviour
 
     void LateUpdate()
     {
-        
-        for(int i = m_brickList.Count - 1; i >= 0; i--)
+        int i;
+        for(i = m_brickList.Count - 1; i >= 0; i--)
         {
             GameObject brickGO = m_brickList[i];
             if (brickGO.activeSelf == false)
@@ -103,6 +102,19 @@ public class LevelEntities : MonoBehaviour
             if (m_brickList.Count == 0)
             {
                 m_gameController.LevelCleared();
+            }
+        }
+        for(i=m_ballList.Count-1; i>=0; i--)
+        {
+            GameObject ballGO = m_ballList[i];
+            if(ballGO.activeSelf==false)
+            {
+                m_ballList.RemoveAt(i);
+                m_ballNumber--;
+            }
+            if (m_ballList.Count == 0)
+            {                                
+                m_gameController.LevelPaddleLost();
             }
         }
     }
@@ -153,7 +165,7 @@ public class LevelEntities : MonoBehaviour
         Debug.Log("LevelEntities.LevelStop");
         m_paddle.Reset();
         m_paddle.gameObject.SetActive(false);
-        m_ball.gameObject.SetActive(false);
+        m_ballGO.SetActive(false);
         foreach(GameObject go in m_ballList)
         {
             go.SetActive(false);
@@ -168,7 +180,11 @@ public class LevelEntities : MonoBehaviour
     {
         Debug.Log("LevelEntities.LevelStart");
         m_paddle.gameObject.SetActive(true);
-        m_ball.gameObject.SetActive(true);
+        GameObject ballGO = Instantiate(m_ballGO);
+        ballGO.SetActive(true);
+        m_ballList.Add(ballGO);
+        m_ball = ballGO.GetComponent<Ball>();
+        m_ballNumber = 1;
         Rigidbody2D brb = m_ball.gameObject.GetComponent<Rigidbody2D>();
         m_paddle.BallAttach(brb);
         m_ball.m_status = Ball.BallStatus.BallAttached;
@@ -289,6 +305,7 @@ public class LevelEntities : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             GameObject ball_go = Instantiate(m_ballGO, Vector3.zero, Quaternion.identity);
+            ball_go.SetActive(true);
             ball_go.transform.parent = transform;
             m_ballList.Add(ball_go);
             Ball ball = ball_go.GetComponent<Ball>();
@@ -329,11 +346,7 @@ public class LevelEntities : MonoBehaviour
     public void RemoveBall(GameObject ball)
     {
         Debug.LogFormat("LevelEntities.RemoveBall {0}",m_ballNumber);
-        m_ballNumber--;
-        if (m_ballNumber <= 0)
-        {
-            m_gameController.LevelPaddleLost();
-        }
+
         ball.SetActive(false);
     }
 
