@@ -164,7 +164,6 @@ public class GameController : MonoBehaviour {
             m_levelEnvironment.EnableEntities(entities);
             m_levelEnvironment.SetLevelNumber(m_levelNumber);
             m_levelEntities.LevelComplete();
-
         }
     }
 
@@ -205,6 +204,11 @@ public class GameController : MonoBehaviour {
             {  
                 m_levelEntities.MouseDrag(hit.point);
             } 
+        }
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            Debug.Log("Force to next level");
+            LevelCleared();
         }
     }
 }

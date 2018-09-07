@@ -66,6 +66,7 @@
      <Compile Include="Assets\Scripts\Paddle.cs" />
      <Compile Include="Assets\Scripts\Powerup.cs" />
      <Compile Include="Assets\Scripts\TmxParser.cs" />
+     <None Include="Assets\Resources\Levels\level_05.xml" />
      <None Include="Assets\Resources\Levels\level_03.xml" />
      <None Include="Assets\Resources\Levels\level_01.xml" />
      <None Include="Assets\Resources\Levels\level_02.xml" />
