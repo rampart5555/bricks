@@ -15,6 +15,7 @@ COLOR_MAP = {
     "240,188,60" => 10 # gold
 }
 */
+
 public class LevelEntities : MonoBehaviour 
 {   
     public enum BrickType{
@@ -44,13 +45,15 @@ public class LevelEntities : MonoBehaviour
     public GameObject m_paddleStartPos;
     public GameObject m_ballStartPos;
     public ParticleSystem m_brickExplosion;
-
+    public GameObject m_soundManagerGO;
 
     private List<ParticleSystem> m_brickExplosionList;
     private List<GameObject> m_ballList;
     private List<GameObject> m_powerupList;
     private List<GameObject> m_brickList;
     private Queue<GameObject> m_bulletList;
+    private SoundManager m_soundManager;
+
 
     GameObject m_brickGO;
     GameObject m_powerupGO;
@@ -65,8 +68,17 @@ public class LevelEntities : MonoBehaviour
     int m_ballNumber;
     int m_levelScore;
 
+    void Awake()
+    {
+        m_ballList = new List<GameObject>();
+        m_powerupList = new List<GameObject>();
+        m_brickList = new List<GameObject>();
+    }
+
     void Start()
     {
+        m_soundManager = m_soundManagerGO.GetComponent<SoundManager>();
+
         m_brickGO = transform.Find("brick").gameObject;
         m_powerupGO=transform.Find("powerup").gameObject;
         m_ballGO=transform.Find("ball").gameObject;
@@ -76,9 +88,7 @@ public class LevelEntities : MonoBehaviour
         m_paddle = transform.Find("paddle").gameObject.GetComponent<Paddle>();
         //m_ball = m_ballGO.GetComponent<Ball>();
 
-        m_ballList = new List<GameObject>();
-        m_powerupList = new List<GameObject>();
-        m_brickList = new List<GameObject>();
+        ;
         m_levelScore = 0;
         InstatiateEntities();
 
@@ -87,6 +97,7 @@ public class LevelEntities : MonoBehaviour
     void LateUpdate()
     {
         int i;
+
         for(i = m_brickList.Count - 1; i >= 0; i--)
         {
             GameObject brickGO = m_brickList[i];
@@ -256,11 +267,19 @@ public class LevelEntities : MonoBehaviour
                 ps.transform.position = brick.transform.position;
                 ps.transform.rotation = brick.transform.rotation;
                 ps.Play();
-                AudioSource ac = ps.gameObject.GetComponent<AudioSource>();
-                ac.Play();
+                m_soundManager.PlaySound("brick_explode");
                 break;
             }                
         }
+    }
+
+    public void SoundBallDeflect()
+    {
+        m_soundManager.PlaySound("ball_deflect");
+    }
+    public void SoundBallLaunch()
+    {
+        m_soundManager.PlaySound("ball_launch");
     }
 
     void AddBrick(int  i, int j, int brick_id, int powerup_id)
@@ -335,8 +354,10 @@ public class LevelEntities : MonoBehaviour
         Brick br = brick.GetComponent<Brick>();
 
         if (br.IsHit() > 0)
+        {
+            SoundBallDeflect();
             return;
-        
+        }
         brick.SetActive(false);
         AddBrickExplosion(brick);
 
@@ -346,8 +367,8 @@ public class LevelEntities : MonoBehaviour
     public void RemoveBall(GameObject ball)
     {
         Debug.LogFormat("LevelEntities.RemoveBall {0}",m_ballNumber);
-
         ball.SetActive(false);
+        m_soundManager.PlaySound("ball_lost");
     }
 
     public void RemovePowerup(GameObject powerup)
@@ -358,5 +379,6 @@ public class LevelEntities : MonoBehaviour
             AddBalls();
         }
         powerup.SetActive(false);
+        m_soundManager.PlaySound("powerup_catch");
     }
 }

@@ -83,12 +83,18 @@ public class Ball : MonoBehaviour {
             rb.GetContacts(m_contacts);
             m_direction.Set(m_contacts[0].normal.x, m_contacts[0].normal.y);
             m_directionChanged = true;
+            m_levelEntities.SoundBallDeflect();
 
         }
         else if (col.gameObject.name == "wall_bottom")
-        {
+        {            
             m_levelEntities.RemoveBall(gameObject);
         }
+        else
+        {
+            m_levelEntities.SoundBallDeflect();
+        }
+
 	}
 
     void OnCollisionExit2D(Collision2D col)

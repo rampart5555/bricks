@@ -55,6 +55,7 @@ public class Paddle : MonoBehaviour {
     {
         FixedJoint2D pfj = GetComponent<FixedJoint2D>();
         pfj.enabled = false;
+        m_levelEntities.SoundBallLaunch();
     }
 
     public void BallAttach(Rigidbody2D ball)

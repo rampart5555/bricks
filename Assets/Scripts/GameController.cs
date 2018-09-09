@@ -19,12 +19,13 @@ public class GameController : MonoBehaviour {
 
     public Text m_fpsGUI;
     public GameObject m_scoreGO;
-
     public GameObject m_levelEnvironmentGO;
     public GameObject m_levelEntitiesGO;
 
+
     LevelEnvironment m_levelEnvironment;
     LevelEntities  m_levelEntities;
+
     TextMesh m_score;
 
     public bool m_doorRightIsOpen;
