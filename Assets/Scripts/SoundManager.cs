@@ -5,7 +5,14 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour {
 
 
-	// Use this for initialization
+
+    public enum SOUND_SFX{
+        BALL_DEFLECT,
+        BALL_LOST,
+        BALL_LAUNCH,
+        BRICK_EXPLODE,
+        POWERUP_CATCH
+    };
     public AudioClip m_ballDeflect;
     public AudioClip m_ballLost;
     public AudioClip m_ballLaunch;
