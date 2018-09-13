@@ -38,16 +38,16 @@ public class LevelEnvironment: MonoBehaviour
     {     
         GameObject m_gameControllerGO = GameObject.FindGameObjectWithTag("GameController");
         m_gameController=m_gameControllerGO.GetComponent<GameController>();
-        StartCoroutine(LoadImage());
+        StartCoroutine(LoadImage("game_portal_top","game_portal_top.jpeg"));
+        StartCoroutine(LoadImage("game_portal_bottom","game_portal_bottom.jpeg"));
     }
         
-    IEnumerator  LoadImage()
-    {
-        string imgname = "floor.jpeg";
-        string imgpath = Application.dataPath +"/../images/" + imgname;
+    IEnumerator  LoadImage(string go_name,string img_name)
+    {        
+        string imgpath = Application.dataPath +"/../images/" + img_name;
 
 
-        GameObject portal_top = GameObject.Find("game_portal_top");
+        GameObject portal_top = GameObject.Find(go_name);
         Renderer rend = portal_top.GetComponent<Renderer>();
 
         Debug.Log(imgpath);
