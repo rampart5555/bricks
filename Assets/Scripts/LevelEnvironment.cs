@@ -38,6 +38,24 @@ public class LevelEnvironment: MonoBehaviour
     {     
         GameObject m_gameControllerGO = GameObject.FindGameObjectWithTag("GameController");
         m_gameController=m_gameControllerGO.GetComponent<GameController>();
+        StartCoroutine(LoadImage());
+    }
+        
+    IEnumerator  LoadImage()
+    {
+        string imgname = "floor.jpeg";
+        string imgpath = Application.dataPath +"/../images/" + imgname;
+
+
+        GameObject portal_top = GameObject.Find("game_portal_top");
+        Renderer rend = portal_top.GetComponent<Renderer>();
+
+        Debug.Log(imgpath);
+        WWW www = new WWW("file:///" + imgpath);
+
+        yield return www;
+        Debug.Log(www.progress);
+        rend.material.mainTexture = www.texture; 
     }
 
     public void SetLevelNumber(int levelnr)
