@@ -38,8 +38,11 @@ public class LevelEnvironment: MonoBehaviour
     {     
         GameObject m_gameControllerGO = GameObject.FindGameObjectWithTag("GameController");
         m_gameController=m_gameControllerGO.GetComponent<GameController>();
-        StartCoroutine(LoadImage("game_portal_top","game_portal_top.jpeg"));
-        StartCoroutine(LoadImage("game_portal_bottom","game_portal_bottom.jpeg"));
+        StartCoroutine(LoadImage("game_portal_top","game_portal_top.png"));
+        StartCoroutine(LoadImage("game_portal_bottom","game_portal_bottom.png"));
+        StartCoroutine(LoadImage("background","background.png"));
+        StartCoroutine(LoadImage("trackpad","trackpad.png"));
+        StartCoroutine(LoadImage("hud","hud.png"));
     }
         
     IEnumerator  LoadImage(string go_name,string img_name)

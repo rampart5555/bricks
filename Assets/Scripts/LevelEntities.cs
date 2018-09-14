@@ -88,7 +88,6 @@ public class LevelEntities : MonoBehaviour
         m_paddle = transform.Find("paddle").gameObject.GetComponent<Paddle>();
         //m_ball = m_ballGO.GetComponent<Ball>();
 
-        ;
         m_levelScore = 0;
         InstatiateEntities();
 
