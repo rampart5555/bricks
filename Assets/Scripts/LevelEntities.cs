@@ -104,7 +104,7 @@ public class LevelEntities : MonoBehaviour
             {
                 Brick br = brickGO.GetComponent<Brick>();
                 m_levelScore += br.GetValue();
-                m_gameController.UpdateScore(m_levelScore);
+                m_gameController.UpdateScore(br.GetValue());
                 m_brickNumber--;
                 Destroy(brickGO);
                 m_brickList.RemoveAt(i);

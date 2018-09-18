@@ -82,15 +82,6 @@ public class LevelEnvironment: MonoBehaviour
         m_gameController.DoorRightOpenComplete();
     }
 
-    public void SetGamePortalPosOpen()
-    {
-        Transform tr;  
-        tr = transform.Find("game_portal_top");
-        tr.localPosition = new Vector3(tr.localPosition.x, 2.6f, tr.localPosition.z);
-        tr = transform.Find("game_portal_bottom");
-        tr.localPosition = new Vector3(tr.position.x, -2.6f, tr.localPosition.z);
-    }
-
     public void DisableEntities(string [] entities)
     {
         Transform tr;

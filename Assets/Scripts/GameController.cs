@@ -2,6 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
+[System.Serializable]
+public class GameData
+{
+    public int m_totalScore;
+    public int m_currentLevel;
+    public int m_lives;
+
+    public GameData()
+    {
+        m_totalScore = 0;
+        m_currentLevel = 1;
+        m_lives = 3;
+    }
+}
 
 public class GameController : MonoBehaviour {
 
@@ -33,6 +50,7 @@ public class GameController : MonoBehaviour {
 
     int m_paddleSpare;
     int m_levelNumber;
+    int m_currentScore;
     float m_deltaTime;
 
     Animator m_levelEnvAnimator;
@@ -42,6 +60,7 @@ public class GameController : MonoBehaviour {
         m_paddleSpare = 3;
     }
 
+
 	void Start () 
     {
         Debug.Log("GameController.Start");
@@ -50,9 +69,73 @@ public class GameController : MonoBehaviour {
         m_levelEntities = m_levelEntitiesGO.GetComponent<LevelEntities>();
         m_levelEnvAnimator = m_levelEnvironmentGO.GetComponent<Animator>();
         m_score = m_scoreGO.GetComponent<TextMesh>();
-        m_levelNumber = 1;
         m_levelEnvironment.SetLevelNumber(m_levelNumber);
+        LoadConfig();
 	}
+
+    void LoadConfig()
+    {
+        GameData data = new GameData();
+        LoadFile(ref data);
+        m_currentScore = data.m_totalScore;
+        m_paddleSpare = data.m_lives;
+        m_levelNumber = data.m_currentLevel;
+        Debug.LogFormat("score {0}, lives {1}, levelNumber {2}", m_score, m_paddleSpare, m_levelNumber);
+        UpdateScore(0);//display score stored in config
+        m_levelEnvironment.SetLevelNumber(m_levelNumber);//update level number
+    }
+
+    void SaveConfig()
+    {
+        GameData data = new GameData();
+        data.m_totalScore = m_currentScore;
+        data.m_lives=m_paddleSpare;
+        data.m_currentLevel = m_levelNumber;
+        SaveFile(data);
+    }
+
+    void ResetConfig()
+    {
+        GameData data = new GameData();
+        data.m_totalScore = 0;
+        data.m_lives=3;
+        data.m_currentLevel = 1;
+        SaveFile(data);
+        LoadConfig();
+    }
+
+    public void SaveFile(GameData data)
+    {
+        string destination = Application.persistentDataPath + "/config.dat";
+        FileStream file;
+        Debug.Log(destination);
+        if (File.Exists (destination))
+            file = File.OpenWrite (destination);
+        else
+            file = File.Create (destination);
+
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+    public void LoadFile(ref GameData data)
+    {
+        string destination = Application.persistentDataPath + "/config.dat";
+        FileStream file;
+
+        if(File.Exists(destination))
+            file = File.OpenRead(destination);
+        else
+        {
+            Debug.LogErrorFormat("File not found {0}", destination);
+            return;
+        }
+
+        BinaryFormatter bf = new BinaryFormatter();
+        data= (GameData) bf.Deserialize(file);
+        file.Close();
+    }
 
     void OnGUI()
     {
@@ -68,7 +151,8 @@ public class GameController : MonoBehaviour {
 
     public void UpdateScore(int score)
     {
-        string text=string.Format(" {0} ", score);  
+        m_currentScore += score;
+        string text=string.Format(" {0} ", m_currentScore);  
         m_score.text = text;
     }
 
@@ -91,7 +175,7 @@ public class GameController : MonoBehaviour {
                 break;
             case GCState.LEVEL_ENTRY_STATE_EXIT:
                 {
-                    string[] entities = { "game_portal_top", "game_portal_bottom", "ball_mesh", "paddle_mesh_0" };
+                    string[] entities = { "ball_mesh", "paddle_mesh_0" };
                     m_levelEnvironment.DisableEntities(entities);
                 }
                 break;
@@ -108,9 +192,15 @@ public class GameController : MonoBehaviour {
                 {                    
                 }            
                 break;
+            case GCState.LEVEL_PADDLE_LOST_STATE_ENTER:
+                {
+                    SaveConfig();
+                    break;
+                }
             case GCState.LEVEL_PADDLE_LOST_STATE_EXIT:
                 {                    
                     m_levelEnvironment.DisablePaddleMesh(m_paddleSpare);
+
                 }
                 break;
             default:
@@ -126,6 +216,14 @@ public class GameController : MonoBehaviour {
     public void LevelCleared()
     {
         m_levelEnvAnimator.SetTrigger("level_cleared");
+        SaveConfig();
+
+    }
+
+    void GameOver()
+    {
+        Debug.Log("GameController.GameOver");
+        m_levelEnvAnimator.SetTrigger("game_over");
     }
 
     public void LevelPaddleLost()
@@ -136,8 +234,8 @@ public class GameController : MonoBehaviour {
             return;
         }
         if (m_paddleSpare == 0)
-        {
-            Debug.Log("*** GAME OVER ***");
+        {            
+            GameOver();
             return;
         }
 
@@ -161,8 +259,6 @@ public class GameController : MonoBehaviour {
             Debug.LogFormat("*** GameController.LEVEL_COMPLETE ***");
             m_levelEnvAnimator.SetTrigger("level_complete");
             m_levelComplete = true;
-            string[] entities = { "game_portal_top", "game_portal_bottom"};
-            m_levelEnvironment.EnableEntities(entities);
             m_levelEnvironment.SetLevelNumber(m_levelNumber);
             m_levelEntities.LevelComplete();
         }
@@ -187,10 +283,20 @@ public class GameController : MonoBehaviour {
             {       
                 Debug.Log(hit.collider.gameObject.name);
                 if (hit.collider.gameObject.name == "button_continue")
-                {
+                {                    
                     Debug.Log("Button Continue pressed");
+                    if (m_paddleSpare == 0)
+                    {
+                        Debug.Log("no mode paddles");
+                        return;
+                    }
                     m_levelEnvAnimator.SetTrigger("level_entry");
                     //m_levelEnvironment.GamePortalCloseEvent();
+                }
+                else if (hit.collider.gameObject.name == "reset_config")
+                {
+                    Debug.Log("Button ResetConfig pressed");
+                    ResetConfig();
                 }
                 else
                     m_levelEntities.MouseRelease();
@@ -210,6 +316,10 @@ public class GameController : MonoBehaviour {
         {
             Debug.Log("Force to next level");
             LevelCleared();
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GameOver();
         }
     }
 }
