@@ -152,6 +152,9 @@ public class LevelEntities : MonoBehaviour
 
     public void MouseRelease()
     {        
+        if (m_ball == null)
+            return;
+        
         if (m_ball.m_status == Ball.BallStatus.BallAttached)
         {
             Debug.LogFormat("LevelEntities.MouseRelease {0}", m_ball.m_status);
