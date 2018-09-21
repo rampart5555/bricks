@@ -70,6 +70,7 @@
      <None Include="Assets\Resources\Levels\level_05.xml" />
      <None Include="Assets\Resources\Levels\level_03.xml" />
      <None Include="Assets\Resources\Levels\level_01.xml" />
+     <None Include="Assets\Materials\font_shader.shader" />
      <None Include="Assets\Resources\Levels\level_02.xml" />
      <None Include="Assets\Resources\Levels\level_04.xml" />
  <Reference Include="UnityEngine.UI">
