@@ -13,8 +13,10 @@ public class LevelEnvironment: MonoBehaviour
     GameController m_gameController;
 
     GameObject m_ballMesh;
-    GameObject m_paddleMesh;
-    GameObject [] m_paddleMeshSlot;
+    GameObject m_paddleEntryMesh;
+    GameObject m_paddleEntrySlot;
+    GameObject m_paddleSpareMesh;
+    GameObject m_paddleSpareSlot;
 
 
 
@@ -22,12 +24,9 @@ public class LevelEnvironment: MonoBehaviour
     {
         
         m_ballMesh = transform.Find("ball_mesh").gameObject;
-        m_paddleMesh = transform.Find("paddle_mesh_0").gameObject;
-        m_paddleMeshSlot = new GameObject[3];
-        for (int i = 0; i < 3; i++)
-        {
-            m_paddleMeshSlot[i] = transform.Find(string.Format("paddle_mesh_{0}", i + 1)).gameObject;
-        }
+        m_paddleEntryMesh = transform.Find("paddle_entry_mesh").gameObject;
+        m_paddleSpareMesh = transform.Find("paddle_spare_mesh").gameObject;
+        m_paddleSpareSlot = transform.Find("paddle_spare_slot").gameObject;
         GameObject go = Instantiate(m_portalCloseEffectGO, new Vector3(0.0f, 0.0f, -2.0f), Quaternion.identity);
         go.transform.parent = transform;
         m_portalCloseEffect = go.GetComponent<ParticleSystem>();
@@ -66,9 +65,15 @@ public class LevelEnvironment: MonoBehaviour
         m_levelNumber.text = "Level " + levelnr;
     }
 
-    public void DisablePaddleMesh(int slot)
+    public void DisableSparePaddleMesh()
     {
-        m_paddleMeshSlot[slot].SetActive(false);
+        
+        m_paddleSpareMesh.SetActive(false);
+    }
+
+    public void EnableSparePaddleMesh()
+    {     
+        m_paddleSpareMesh.SetActive(true);
     }
 
     public void GamePortalCloseEvent()

@@ -36,6 +36,11 @@ ModelImporter:
     100056: hud
     100058: trackpad
     100060: Plane
+    100062: paddle_mesh_0.001
+    100064: paddle_entry_mesh
+    100066: paddle_entry_slot
+    100068: paddle_spare_mesh
+    100070: paddle_spare_slot
     400000: background
     400002: ball
     400004: ball_start_pos
@@ -67,6 +72,11 @@ ModelImporter:
     400056: hud
     400058: trackpad
     400060: Plane
+    400062: paddle_mesh_0.001
+    400064: paddle_entry_mesh
+    400066: paddle_entry_slot
+    400068: paddle_spare_mesh
+    400070: paddle_spare_slot
     2100000: No Name
     2100002: Material
     2300000: background
@@ -89,6 +99,9 @@ ModelImporter:
     2300034: hud
     2300036: trackpad
     2300038: Plane
+    2300040: paddle_mesh_0.001
+    2300042: paddle_entry_mesh
+    2300044: paddle_spare_mesh
     3300000: background
     3300002: ball
     3300004: Cube.002
@@ -109,6 +122,9 @@ ModelImporter:
     3300034: hud
     3300036: trackpad
     3300038: Plane
+    3300040: paddle_mesh_0.001
+    3300042: paddle_entry_mesh
+    3300044: paddle_spare_mesh
     4300000: paddle
     4300002: ball
     4300004: door_left
@@ -129,6 +145,9 @@ ModelImporter:
     4300034: hud
     4300036: trackpad
     4300038: Plane
+    4300040: paddle_mesh_0.001
+    4300042: paddle_spare_mesh
+    4300044: paddle_entry_mesh
   externalObjects: {}
   materials:
     importMaterials: 1

@@ -167,7 +167,7 @@ public class GameController : MonoBehaviour {
                     string level_str=string.Format("level_{0:00}",m_levelNumber);
                     m_levelEntities.LevelStop();
                     m_levelEntities.LevelLoad(level_str);
-                    string[] entities_1= {"ball_mesh", "paddle_mesh_0" };
+                    string[] entities_1= {"ball_mesh", "paddle_entry_mesh" };
                     m_levelEnvironment.EnableEntities(entities_1);
                     m_levelNumber++;
 
@@ -175,7 +175,7 @@ public class GameController : MonoBehaviour {
                 break;
             case GCState.LEVEL_ENTRY_STATE_EXIT:
                 {
-                    string[] entities = { "ball_mesh", "paddle_mesh_0" };
+                    string[] entities = { "ball_mesh", "paddle_entry_mesh" };
                     m_levelEnvironment.DisableEntities(entities);
                 }
                 break;
@@ -195,11 +195,12 @@ public class GameController : MonoBehaviour {
             case GCState.LEVEL_PADDLE_LOST_STATE_ENTER:
                 {
                     SaveConfig();
+                    m_levelEnvironment.EnableSparePaddleMesh();
                     break;
                 }
             case GCState.LEVEL_PADDLE_LOST_STATE_EXIT:
                 {                    
-                    m_levelEnvironment.DisablePaddleMesh(m_paddleSpare);
+                    m_levelEnvironment.DisableSparePaddleMesh();
 
                 }
                 break;
@@ -240,8 +241,8 @@ public class GameController : MonoBehaviour {
         }
 
         m_levelEntities.LevelStop();
-        string trigger=string.Format("paddle_lost_{0}",m_paddleSpare);
-        m_levelEnvAnimator.SetTrigger(trigger);
+        //string trigger=string.Format("paddle_lost_{0}",m_paddleSpare);
+        m_levelEnvAnimator.SetTrigger("paddle_lost");
         m_paddleSpare--;
 
     }
