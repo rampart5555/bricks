@@ -22,6 +22,12 @@ public class GameData
 
 public class GameController : MonoBehaviour {
 
+    public Text m_fpsGUI;
+    public GameObject m_scoreGO;
+    public GameObject m_paddleNrTextGO;
+    public GameObject m_levelEnvironmentGO;
+    public GameObject m_levelEntitiesGO;
+
     public enum GCState{
         NONE,
         LEVEL_ENTRY_STATE_ENTER,
@@ -34,16 +40,14 @@ public class GameController : MonoBehaviour {
         LEVEL_PADDLE_LOST_STATE_EXIT
     };
 
-    public Text m_fpsGUI;
-    public GameObject m_scoreGO;
-    public GameObject m_levelEnvironmentGO;
-    public GameObject m_levelEntitiesGO;
+
 
 
     LevelEnvironment m_levelEnvironment;
     LevelEntities  m_levelEntities;
 
     TextMesh m_score;
+    TextMesh m_paddleNrText;
 
     public bool m_doorRightIsOpen;
     private bool m_levelComplete;
@@ -69,6 +73,7 @@ public class GameController : MonoBehaviour {
         m_levelEntities = m_levelEntitiesGO.GetComponent<LevelEntities>();
         m_levelEnvAnimator = m_levelEnvironmentGO.GetComponent<Animator>();
         m_score = m_scoreGO.GetComponent<TextMesh>();
+        m_paddleNrText = m_paddleNrTextGO.GetComponent<TextMesh>();
         m_levelEnvironment.SetLevelNumber(m_levelNumber);
         LoadConfig();
 	}
@@ -149,6 +154,11 @@ public class GameController : MonoBehaviour {
 
     }
 
+    public void UpdatePaddleNumber(int paddleNr)
+    {
+        m_paddleNrText.text = paddleNr + " x ";
+    }
+
     public void UpdateScore(int score)
     {
         m_currentScore += score;
@@ -170,6 +180,7 @@ public class GameController : MonoBehaviour {
                     string[] entities_1= {"ball_mesh", "paddle_entry_mesh" };
                     m_levelEnvironment.EnableEntities(entities_1);
                     m_levelNumber++;
+                    UpdatePaddleNumber(m_paddleSpare);
 
                 }
                 break;
@@ -225,6 +236,7 @@ public class GameController : MonoBehaviour {
     {
         Debug.Log("GameController.GameOver");
         m_levelEnvAnimator.SetTrigger("game_over");
+        ResetConfig();
     }
 
     public void LevelPaddleLost()
@@ -241,9 +253,9 @@ public class GameController : MonoBehaviour {
         }
 
         m_levelEntities.LevelStop();
-        //string trigger=string.Format("paddle_lost_{0}",m_paddleSpare);
         m_levelEnvAnimator.SetTrigger("paddle_lost");
         m_paddleSpare--;
+        UpdatePaddleNumber(m_paddleSpare);
 
     }
 
